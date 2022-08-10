@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.7'
 
 # Common Django template for GeoNode and Celery services below
 x-common-django:
@@ -15,10 +15,8 @@ x-common-django:
     - data:/data
     - tmp:/tmp
   depends_on:
-    db:
-      condition: service_healthy
-    geoserver:
-      condition: service_healthy
+    - db
+    - geoserver
 
 services:
 
@@ -107,10 +105,8 @@ services:
       - tmp:/tmp
     restart: on-failure
     depends_on:
-      db:
-        condition: service_healthy
-      data-dir-conf:
-        condition: service_healthy
+      - db
+      - data-dir-conf
 
   data-dir-conf:
     image: geonode/geoserver_data:2.20.5
@@ -135,7 +131,7 @@ services:
       - dbbackups:/pg_backups
     restart: on-failure
     healthcheck:
-      test: "pg_isready -d gis"
+      test: "pg_isready -d geonode"
     # uncomment to enable remote connections to postgres
     #ports:
     #  - "5432:5432"
