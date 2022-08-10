@@ -254,3 +254,8 @@ if settings.MONITORING_ENABLED:
 urlpatterns += [
     url(r'^metadata_update_redirect$', views.metadata_update_redirect, name='metadata_update_redirect'),
 ]
+
+# Addition of SPADE custom API
+urlpatterns += [  
+    path('api/spade/', include('geonode.api_spade.urls')),
+]
