@@ -16,5 +16,4 @@ urlpatterns = [
     path(r'adb_geospatdivision/subdivision/', views.ADBGeospatdivisionSubdivisionCustomListView.as_view()),
     path(r'geospatdivision_autocomplete/', views.ADBGeospatdivisionAutocomplete.as_view(), name='geospatdivision-autocomplete',),
     path(r'gdc_display/', TemplateView.as_view(template_name='gdc_catalog.html')),
-    path(r'wrap/', TemplateView.as_view(template_name='wrapping_interface.html')),
 ]
