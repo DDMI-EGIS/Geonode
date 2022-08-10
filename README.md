@@ -1,3 +1,15 @@
+Note on this fork
+=================
+
+This fork of geonode contains the changes made in order to add an laternate browser of data into geonode.
+Once geonode is running, this browser is accessible at the following endpoint:
+
+```api/spade/gdc_display.html```
+
+Some instructions to setup easily geonode and drafts guidelines to contribute to this project are given [HERE](README_GDC.md)
+
+___
+
 ![GeoNode](https://raw.githubusercontent.com/GeoNode/documentation/master/about/img/geonode-logo_for_readme.gif "GeoNode")
 ![OSGeo Project](https://www.osgeo.cn/qgis/_static/images/osgeoproject.png)
 
