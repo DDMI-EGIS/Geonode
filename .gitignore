@@ -96,3 +96,5 @@ scripts/spcgeonode/_volume_*
 !hooks/*
 
 /.env
+/backups
+/restores
