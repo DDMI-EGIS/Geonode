@@ -202,7 +202,7 @@ class LegendItem extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://" + DOMAIN_NAME + "/api/spade/resource_detail/" + this.props.id + "/")
+        fetch( DOMAIN_NAME_FULL + "api/spade/resource_detail/" + this.props.id + "/")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -250,14 +250,14 @@ class LegendItem extends React.Component {
 
                                 // Getting thumbnail depending on custom thumbnail availability
                                 if (result.curatedthumbnail != null) {
-                                    var thumbnail_url = "https://" + DOMAIN_NAME + '/' + result.curatedthumbnail.thumbnail_url.toString()
+                                    var thumbnail_url = DOMAIN_NAME_FULL + result.curatedthumbnail.thumbnail_url.toString()
                                 }
                                 else {
                                     var thumbnail_url = result.thumbnail_url
                                 }
 
                                 // Getting proper legend URL
-                                result.detail_url = "https://" + DOMAIN_NAME + '/' + result.detail_url.toString()
+                                result.detail_url = DOMAIN_NAME_FULL + result.detail_url.toString()
 
                                 // Loading layer
                                 mainLayerManager.addMapLayer(result.alternate, this.props.layerid)
@@ -342,8 +342,8 @@ class LegendItem extends React.Component {
                             </div>
                         </div>
                         <div data-uk-tooltip="Click to enlarge" data-uk-lightbox>
-                            <a data-type="image" href={"https://" + DOMAIN_NAME + "/geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=false&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} >
-                                <ImgPlus src={"https://" + DOMAIN_NAME + "/geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=true&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} width="500" height="500" alt="Legend"></ImgPlus>
+                            <a data-type="image" href={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=false&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} >
+                                <ImgPlus src={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=true&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} width="500" height="500" alt="Legend"></ImgPlus>
                             </a>
                         </div>
                     </div>
@@ -572,7 +572,7 @@ class SelectMultipleList extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://" + DOMAIN_NAME + "/api/spade/" + this.props.id + "/")
+        fetch(DOMAIN_NAME_FULL + "api/spade/" + this.props.id + "/")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -852,7 +852,7 @@ class ResultItem extends React.Component {
 
     
     componentDidMount() {
-        fetch("https://" + DOMAIN_NAME + "/api/spade/resource_detail/"+this.props.pk+"/")
+        fetch(DOMAIN_NAME_FULL + "api/spade/resource_detail/"+this.props.pk+"/")
         .then(res => res.json())
         .then(
             (result) => {
@@ -900,13 +900,13 @@ class ResultItem extends React.Component {
                                 
                                 // Getting thumbnail depending on custom thumbnail availability
                                 if(result.curatedthumbnail != null){
-                                    var thumbnail_url = "https://" + DOMAIN_NAME + '/' + result.curatedthumbnail.thumbnail_url.toString()
+                                    var thumbnail_url = DOMAIN_NAME_FULL + result.curatedthumbnail.thumbnail_url.toString()
                                 }
                                 else {
                                     var thumbnail_url = result.thumbnail_url
                                 }
 
-                                result.detail_url = "https://" + DOMAIN_NAME + '/' + result.detail_url.toString()
+                                result.detail_url = DOMAIN_NAME_FULL + result.detail_url.toString()
 
                                 // Changing state of react component
                                 this.setState({
@@ -1022,7 +1022,7 @@ class ResultItem extends React.Component {
 // Class used to manage and refresh URL filters
 class FilterManager {
     constructor(){
-        this.url = new URL("https://" + DOMAIN_NAME + "/api/spade/resource_list/")
+        this.url = new URL(DOMAIN_NAME_FULL + "api/spade/resource_list/")
         this.bboxFilterActive = true
         this.bboxFilterValue = ''
     }
@@ -1155,7 +1155,7 @@ class LayerManager {
             format: 'image/png',
             maxZoom: 20,
         }
-        var layerLeaflet = L.tileLayer.wms('https://' + DOMAIN_NAME + '/geoserver/ows?', wmsOptions).addTo(map);
+        var layerLeaflet = L.tileLayer.wms(DOMAIN_NAME_FULL +'/geoserver/ows?', wmsOptions).addTo(map);
         layerLeaflet.setOpacity(100)
 
         this.layers[layerKey] = {
@@ -1274,7 +1274,7 @@ function toTitleCase(str) {
 // ==================================================================================================================
 
 // Global variables
-var DOMAIN_NAME = window.location.hostname
+var DOMAIN_NAME = 'geonode.spade-staging.egis-eau-sas.fr'
 var DOMAIN_NAME_FULL = 'https://'+DOMAIN_NAME+'/'
 //window.location.hostname
 
