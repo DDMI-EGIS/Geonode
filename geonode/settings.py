@@ -443,7 +443,9 @@ GEONODE_INTERNAL_APPS = (
     'geonode.tasks',
     'geonode.messaging',
     'geonode.favorite',
-    'geonode.monitoring'
+    'geonode.monitoring',
+    # SPADE
+    'geonode.api_spade',
 )
 
 GEONODE_CONTRIB_APPS = (
