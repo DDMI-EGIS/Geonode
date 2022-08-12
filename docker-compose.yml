@@ -36,7 +36,7 @@ services:
     environment:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
-    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini --logto /usr/src/geonode/log.log"
 
   # Celery worker that executes celery tasks created by Django.
   celery:
@@ -62,14 +62,19 @@ services:
       - HTTP_PORT=${HTTP_PORT}
       - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
       - RESOLVER=127.0.0.11
-    ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+    # ports:
+    #   - "${HTTP_PORT}:80"
+    #   - "${HTTPS_PORT}:443"
     volumes:
       - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
       - statics:/mnt/volumes/statics
     restart: on-failure
+    networks:
+      kobo-fe-network:
+        aliases:
+          - nginx4${COMPOSE_PROJECT_NAME}
+      default:
 
   # Gets and installs letsencrypt certificates
   letsencrypt:
@@ -131,7 +136,7 @@ services:
       - dbbackups:/pg_backups
     restart: on-failure
     healthcheck:
-      test: "pg_isready -d geonode"
+      test: "pg_isready -d geonode -U postgres"
     # uncomment to enable remote connections to postgres
     #ports:
     #  - "5432:5432"
@@ -165,3 +170,8 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-tmp
   rabbitmq:
     name: ${COMPOSE_PROJECT_NAME}-rabbitmq
+
+networks:
+  kobo-fe-network:
+    external:
+      name: kobofe_kobo-fe-network
