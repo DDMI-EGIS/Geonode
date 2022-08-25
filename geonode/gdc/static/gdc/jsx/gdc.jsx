@@ -622,7 +622,7 @@ class SelectMultipleList extends React.Component {
                 icon_url = icon_url.pathname
 
                 list_items.push(
-                    <SelectMultipleListItem key={item["identifier"]} code={item["identifier"]} parent={this.props.filter_key} icon={icon_url} name={item["description_en"]} item_id={item["identifier"]}></SelectMultipleListItem>
+                    <SelectMultipleListItem key={item["identifier"]} code={item["identifier"]} parent={this.props.filter_key} icon={icon_url} name={item["gn_description"]} item_id={item["identifier"]}></SelectMultipleListItem>
                 )
             }
         }
@@ -804,7 +804,7 @@ class ResultList extends React.Component {
         return (
             <div className="uk-margin-small-left" >
                 {resultlist_title}
-                <div className="spade-custom-scroller uk-padding-small uk-padding-remove-bottom" style={{height:'calc(100vh - 300px)'}}>
+                <div className="spade-custom-scroller uk-padding-small uk-padding-remove-bottom" style={{height:'calc(100vh - 200px)'}}>
                     {resultlist_items}
                 </div>
             </div>
@@ -875,16 +875,24 @@ class ResultItem extends React.Component {
 
     
     componentDidMount() {
-        fetch(DOMAIN_NAME_FULL + "gdc/api/resource_detail/"+this.props.pk+"/")
-        .then(res => res.json())
-        .then(
+        fetch(DOMAIN_NAME_FULL + "gdc/api/resource_detail/"+this.props.pk+"/").then(res => res.json()).then(
             (result) => {
-                // Getting Layer coordinates from WMS servcie
-                fetch(DOMAIN_NAME_FULL+"capabilities/layer/" + this.props.pk + "/")
-                .then(xml_text => xml_text.text())
-                .then(
+                if (result.hasOwnProperty('success')){
+                    if(!result.success){
+                        this.setState({
+                            status: 'hidden',
+                            layerData: {}
+                        })
+
+                    }
+                }
+                else {
+                    // Getting Layer coordinates from WMS servcie
+                    fetch(DOMAIN_NAME_FULL + "capabilities/layer/" + this.props.pk + "/")
+                        .then(xml_text => xml_text.text())
+                        .then(
                             (xml_text) => {
-                                
+
                                 var parser = new DOMParser();
                                 var xmlDoc = parser.parseFromString(xml_text, "text/xml");
                                 var coordsXML = xmlDoc.getElementsByTagName("EX_GeographicBoundingBox")[0].children
@@ -895,7 +903,7 @@ class ResultItem extends React.Component {
                                     [parseFloat(coordsXML[3].innerHTML), parseFloat(coordsXML[0].innerHTML)],
                                     [parseFloat(coordsXML[2].innerHTML), parseFloat(coordsXML[0].innerHTML)],
                                 ]
-                                
+
                                 // Setting the layer polygon extent
                                 var bbox_polygon = L.polygon(bbox_coords_correct)
                                 bbox_polygon.setStyle({
@@ -912,7 +920,7 @@ class ResultItem extends React.Component {
                                     iconAnchor: [15, 15],
                                 });
                                 var bbox_center = L.marker(bbox_polygon.getBounds().getCenter(), { icon: icon })
-                                
+
                                 // Setting title nicer
                                 result.title = toTitleCase(result.title.replaceAll('_', ' '))
 
@@ -920,9 +928,9 @@ class ResultItem extends React.Component {
                                 var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                                 var date_refactor = new Date(result.date)
                                 result.date = date_refactor.toLocaleDateString("en-US", options)
-                                
+
                                 // Getting thumbnail depending on custom thumbnail availability
-                                if(result.curatedthumbnail != null){
+                                if (result.curatedthumbnail != null) {
                                     var thumbnail_url = DOMAIN_NAME_FULL + result.curatedthumbnail.thumbnail_url.toString()
                                 }
                                 else {
@@ -940,7 +948,9 @@ class ResultItem extends React.Component {
                                     thumbnail_url: thumbnail_url
                                 })
                             }
-                            )
+                        )
+                }
+                
                 },
                 (error) => {
                     UIkit.notification('Error retrieving datasets results from server', 'danger');
@@ -949,8 +959,8 @@ class ResultItem extends React.Component {
                         error
                     });
                 }
-            )
-        }
+        ).catch(error => console.log('error============:', error));
+    }
         
     componentWillUnmount() {
         //this.state.bbox.remove()
@@ -1021,6 +1031,18 @@ class ResultItem extends React.Component {
                     </div>
                 </div>
             )
+        }
+        else if (this.state.status == 'hidden'){
+            var domToRender = (
+                <div key={this.props.pk} className=" uk-animation-fade uk-margin-small-bottom uk-padding-small uk-card uk-card-default uk-card-body uk-card-hover " onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
+                    <p className="uk-margin-small uk-text-small uk-text-bolder uk-text-muted">Data not visible.</p>
+                    <div className="uk-padding-remove uk-grid-small uk-text-muted" data-uk-grid>
+                        <p className="uk-text-justify uk-text-small uk-text-muted">Insufficient permissions to access this dataset.</p>
+                    </div>
+
+                </div>
+            )
+
         }
         else {
             var domToRender = (
