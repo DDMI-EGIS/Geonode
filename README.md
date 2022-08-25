@@ -1,10 +1,10 @@
 Note on this fork
 =================
 
-This fork of geonode contains the changes made in order to add an laternate browser of data into geonode.
-Once geonode is running, this browser is accessible at the following endpoint:
+This fork of geonode contains the dev project for the django-geonode-gdc contrib app. This app is an handy data browser for geonode.
+The browser source code is availble here:
 
-```api/spade/gdc_display.html```
+![GeoNode](https://github.com/Inogeo/spade/tree/4.x-gdc/geonode/gdc)
 
 Some instructions to setup easily geonode and drafts guidelines to contribute to this project are given [HERE](README_GDC.md)
 
