@@ -4,6 +4,14 @@ from rest_framework import viewsets, generics
 from geonode.layers.models import *
 from geonode.base.models import *
 
+# permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from geonode.base.api.permissions import (
+    UserHasPerms,
+)
+
 # Tool to filter bbox
 from geonode.base.bbox_utils import filter_bbox # filter_bbox(queryset, bbox) => BBOX as text "xmin,ymin,xmax,ymax"
 
@@ -11,11 +19,15 @@ class ResourceDetailCustomViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows to filter geo-spatial data catalogue results
     """
+    authentication_classes = [SessionAuthentication, BasicAuthentication, OAuth2Authentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, UserHasPerms]
     queryset = Dataset.objects.all()
     serializer_class = ResourceDetailSerializer
 
 class ResourceCustomListView(generics.ListAPIView):
     serializer_class = ResourceSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication, OAuth2Authentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, UserHasPerms]
 
     # Adding filters
     def get_queryset(self):

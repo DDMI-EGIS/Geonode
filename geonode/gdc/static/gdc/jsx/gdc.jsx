@@ -227,7 +227,7 @@ class LegendItem extends React.Component {
                                 var bbox_polygon = L.polygon(bbox_coords_correct)
                                 bbox_polygon.setStyle({
                                     color: "red",
-                                    opacity: 0.5,
+                                    opacity: 1,
                                     fillColor: "red",
                                     fillOpacity: 0.3
                                 });
@@ -261,6 +261,7 @@ class LegendItem extends React.Component {
 
                                 // Loading layer
                                 mainLayerManager.addMapLayer(result.alternate, this.props.layerid)
+                                
 
                                 // Zoom to layer
                                 getMap().fitBounds(bbox_polygon.getBounds());
@@ -907,19 +908,15 @@ class ResultItem extends React.Component {
                                 // Setting the layer polygon extent
                                 var bbox_polygon = L.polygon(bbox_coords_correct)
                                 bbox_polygon.setStyle({
-                                    color: "red",
-                                    opacity: 0.5,
-                                    fillColor: "red",
-                                    fillOpacity: 0.3
+                                    color: "blue",
+                                    opacity: 1,
+                                    weight:1,
+                                    fillColor: "blue",
+                                    fillOpacity: 0,
                                 });
 
                                 // Setting the layer center marker
-                                var icon = L.icon({
-                                    iconUrl: '/static/gdc/img/layer_position_icon.png',
-                                    iconSize: [30, 30],
-                                    iconAnchor: [15, 15],
-                                });
-                                var bbox_center = L.marker(bbox_polygon.getBounds().getCenter(), { icon: icon })
+                                var bbox_center = L.marker(bbox_polygon.getBounds().getCenter())
 
                                 // Setting title nicer
                                 result.title = toTitleCase(result.title.replaceAll('_', ' '))
@@ -943,14 +940,17 @@ class ResultItem extends React.Component {
                                 this.setState({
                                     status: 'ready',
                                     layerData: result,
-                                    bbox: bbox_polygon,
+                                    bbox_polygon: bbox_polygon,
                                     bbox_center: bbox_center,
                                     thumbnail_url: thumbnail_url
                                 })
+                                
+                                // Adding polygon to map
+                                this.state.bbox_polygon.addTo(map)
+                                markers.addLayer(this.state.bbox_center)
                             }
                         )
                 }
-                
                 },
                 (error) => {
                     UIkit.notification('Error retrieving datasets results from server', 'danger');
@@ -959,12 +959,16 @@ class ResultItem extends React.Component {
                         error
                     });
                 }
-        ).catch(error => console.log('error============:', error));
+        )
     }
         
     componentWillUnmount() {
-        //this.state.bbox.remove()
-        //this.state.bbox_center.remove()
+        if (this.state.bbox_polygon){
+            this.state.bbox_polygon.remove()
+        }
+        if (this.state.bbox_center){
+            markers.removeLayer(this.state.bbox_center)
+        }
     }
 
     handleLayerAdd(){
@@ -973,13 +977,33 @@ class ResultItem extends React.Component {
     }
 
     handleMouseEnter() {
-        this.state.bbox.addTo(map)
-        this.state.bbox_center.addTo(map)
+        // Update bbox colors to red
+
+        this.state.bbox_polygon.setStyle({
+            color: "red",
+            opacity: 1,
+            pane: 'overlayPane',
+            weight:1,
+            fillColor: "red",
+            fillOpacity: 0.3
+        });
+
+        //this.state.bbox_polygon.addTo(map)
+        //this.state.bbox_center.addTo(map)
     }
 
     handleMouseLeave(){
-        this.state.bbox.remove()
-        this.state.bbox_center.remove()
+        // Update bbox colors to blue
+
+        this.state.bbox_polygon.setStyle({
+            color: "blue",
+            weight:1,
+            opacity: 1,
+            fillColor: "blue",
+            fillOpacity: 0
+        });
+        //this.state.bbox_polygon.remove()
+        //this.state.bbox_center.remove()
     }
 
 
@@ -1333,7 +1357,7 @@ $(document).ready(function () {
 });
 
 // LEAFLET COMPONENTS
-var map = L.map('map', { attributionControl: true, zoomControl: false })
+var map = L.map('map', { attributionControl: true, zoomControl: false})
 
 // Setting map center
 map.setView([14.5965788, 120.9445403], 4);
@@ -1344,7 +1368,7 @@ var bounds = L.latLngBounds(southWest, northEast);
 map.setMaxBounds(bounds)
 
 // Map Min Zoom
-map.options.minZoom = 2;
+map.options.minZoom = 3;
 
 // Adding custom controls to map
 map.addControl(new legendPanelToggle());
@@ -1416,6 +1440,9 @@ new L.basemapsSwitcher([
         name: 'G. Satellite'
     },
 ], { position: 'bottomright' }).addTo(map);
+
+var markers = L.markerClusterGroup();
+map.addLayer(markers);
 
 // Filter manager
 var mainFilterManager = new FilterManager()

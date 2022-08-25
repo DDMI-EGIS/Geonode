@@ -38,6 +38,11 @@
   <link rel="stylesheet" href="/static/gdc/css/leaflet.switchbasemap.css" />
   <script src="/static/gdc/js/leaflet.switchbasemap.js"></script>
 
+  <!--markercluster-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="/static/gdc/css/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
   <!--DatePicker-->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
@@ -107,7 +112,7 @@
     <script type="text/babel" src="/static/gdc/jsx/gdc.jsx"></script>
 
     <script type="text/javascript">
-      setTimeout(toggleLoading, 3000)
+      setTimeout(toggleLoading, 1500)
       function toggleLoading() {
         $('#preloader').hide();
         $('#component').show();
