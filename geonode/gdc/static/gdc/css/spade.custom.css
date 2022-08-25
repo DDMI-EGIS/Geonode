@@ -19,11 +19,11 @@
 /**==================== LAYER SEARCH PANEL ==================**/
 /**==========================================================**/
 
-.spade-custom-padding {
+.gdc-custom-padding {
     padding:0.5em;
 }
 
-.spade-custom-panel {
+.gdc-custom-panel {
     transition: width 0.5s, opacity 0.2s;
 }
 
@@ -35,7 +35,7 @@
 /**==================== CUSTOM LEAFLET BUTTONS LOCATION ==================**/
 /**=======================================================================**/
 
-.spade-custom-leaflet-button {
+.gdc-custom-leaflet-button {
   position:relative;
   margin-top: 100px;
   height: 30px;
@@ -52,12 +52,12 @@
   top: -10px;
 }
 
-.spade-custom-leaflet-button-right {
+.gdc-custom-leaflet-button-right {
     right: -10px;
     border-bottom-left-radius: 30px;
 }
 
-.spade-custom-leaflet-button-left {
+.gdc-custom-leaflet-button-left {
     left: -10px;
     border-bottom-right-radius: 30px;
 }
@@ -66,43 +66,53 @@
 /**==================== CUSTOM THEME =====================================**/
 /**=======================================================================**/
 
-.spade-custom-theme-icon {
+.gdc-custom-theme-icon {
     filter: invert(50%) sepia(0%) saturate(1542%) hue-rotate(171deg) brightness(79%) contrast(97%);
 }
 
-.spade-custom-theme-icon:hover {
+.gdc-custom-theme-icon:hover {
     filter: invert(22%) sepia(94%) saturate(1388%) hue-rotate(179deg) brightness(108%) contrast(98%);
 }
 
-.spade-custom-theme-icon-selected {
+.gdc-custom-theme-icon-selected {
     filter: invert(22%) sepia(94%) saturate(1388%) hue-rotate(179deg) brightness(108%) contrast(98%);
+}
+
+.gdc-custom-border {
+    border: 1px solid #ececec;
+}
+
+.gdc-custom-border:hover {
+    border: 1px solid #c7c7c7;
 }
 
 
 /**==========================================================**/
 /**==================== SCROLLER ============================**/
 /**==========================================================**/
-.spade-custom-scroller {
+
+/* Display scroll gdc-custom-scroller */
+.gdc-custom-scroller {
     scrollbar-width: thin;
     overflow-y: scroll;
 }
 
-.spade-custom-scroller::-webkit-scrollbar {
-  width: 5px;
-  height: 8px;
-  background-color: white; /* or add it to the track */
-  scrollbar-color:auto;
+.gdc-custom-scroller::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: #ffffff;
+    /* or add it to the track */
+    scrollbar-color: #ececec;
 }
 
 /* Add a thumb */
-.spade-custom-scroller::-webkit-scrollbar-thumb {
-    background: white;
+.gdc-custom-scroller::-webkit-scrollbar-thumb {
+    background: #ececec;
 }
 
-/**==========================================================**/
-/**==================== FULL HEIGHT =========================**/
-/**==========================================================**/
 
-.spade-custom-height-fullspace {
-    height: calc(100vh - 72px);
+/* Do not display scroll gdc-custom-scroller */
+.gdc-custom-noscroller {
+    /*scrollbar-width: thin;*/
+    display: none;
 }

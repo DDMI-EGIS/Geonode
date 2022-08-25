@@ -655,7 +655,7 @@ class SelectMultipleListItem extends React.Component {
         super(props);
         this.state = {
             active:false,
-            class:"spade-custom-theme-icon",
+            class:"gdc-custom-theme-icon",
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -693,10 +693,10 @@ class SelectMultipleListItem extends React.Component {
     render() {
 
         if(this.state.active){
-            var itemDom = <img className="uk-icon-image spade-custom-theme-icon-selected" src={DOMAIN_NAME_FULL + this.props.icon.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
+            var itemDom = <img className="uk-icon-image gdc-custom-theme-icon-selected" src={DOMAIN_NAME_FULL + this.props.icon.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
         }
         else {
-            var itemDom = <img className="uk-icon-image spade-custom-theme-icon" src={DOMAIN_NAME_FULL + this.props.icon.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
+            var itemDom = <img className="uk-icon-image gdc-custom-theme-icon" src={DOMAIN_NAME_FULL + this.props.icon.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
         }
 
 
@@ -804,7 +804,7 @@ class ResultList extends React.Component {
         return (
             <div className="uk-margin-small-left" >
                 {resultlist_title}
-                <div className="spade-custom-scroller uk-padding-small uk-padding-remove-bottom" style={{height:'calc(100vh - 200px)'}}>
+                <div className="gdc-custom-scroller uk-padding-small uk-padding-remove-bottom" style={{height:'calc(100vh - 200px)'}}>
                     {resultlist_items}
                 </div>
             </div>
@@ -997,7 +997,7 @@ class ResultItem extends React.Component {
             // }
 
             var domToRender = (
-                <div key={this.props.pk} className=" uk-animation-fade uk-margin-small-bottom uk-padding-small uk-card uk-card-default uk-card-body uk-card-hover " onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
+                <div key={this.props.pk} className="uk-animation-fade uk-margin-small-bottom uk-padding-small uk-card uk-card-body gdc-custom-border uk-transition-toggle" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
                     <p className="uk-margin-small uk-text-small uk-text-bolder">{this.state.layerData.title}</p>
                     <ul className="uk-margin-small uk-iconnav">
                         <li><a href={"#modal_layerresult_" + this.props.pk} data-uk-tooltip="Display layer information" data-uk-icon="icon: info" data-uk-toggle=""></a></li>
@@ -1034,7 +1034,7 @@ class ResultItem extends React.Component {
         }
         else if (this.state.status == 'hidden'){
             var domToRender = (
-                <div key={this.props.pk} className=" uk-animation-fade uk-margin-small-bottom uk-padding-small uk-card uk-card-default uk-card-body uk-card-hover " onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
+                <div key={this.props.pk} className=" uk-animation-fade uk-margin-small-bottom uk-padding-small uk-card uk-card-body gdc-custom-border" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
                     <p className="uk-margin-small uk-text-small uk-text-bolder uk-text-muted">Data not visible.</p>
                     <div className="uk-padding-remove uk-grid-small uk-text-muted" data-uk-grid>
                         <p className="uk-text-justify uk-text-small uk-text-muted">Insufficient permissions to access this dataset.</p>
@@ -1046,7 +1046,9 @@ class ResultItem extends React.Component {
         }
         else {
             var domToRender = (
-                <p className="uk-animation-fade uk-padding-small uk-text-small uk-text-bolder"><span data-uk-spinner className="uk-padding-remove"></span>&nbsp; &nbsp; &nbsp;Result loading...</p>
+                <div key={this.props.pk} className="uk-animation-fade uk-margin-small-bottom uk-padding-small uk-card uk-card-body gdc-custom-border">
+                    <p className="uk-animation-fade uk-padding-small uk-text-small uk-text-bolder"><span data-uk-spinner className="uk-padding-remove"></span>&nbsp; &nbsp; &nbsp;Result loading...</p>
+                </div>
             )
 
         }
@@ -1258,7 +1260,7 @@ var legendPanelToggle = L.Control.extend({
     },
 
     onAdd: function () {
-        var container = L.DomUtil.create('input', "uk-text-bolder spade-custom-leaflet-button spade-custom-leaflet-button-right");
+        var container = L.DomUtil.create('input', "uk-text-bolder gdc-custom-leaflet-button gdc-custom-leaflet-button-right");
         container.type = "button";
         container.title = "No cat";
         container.value = "        Legend >   ";
@@ -1278,7 +1280,7 @@ var searchPanelToggle = L.Control.extend({
     },
 
     onAdd: function () {
-        var container = L.DomUtil.create('input', "uk-text-bolder spade-custom-leaflet-button spade-custom-leaflet-button-left");
+        var container = L.DomUtil.create('input', "uk-text-bolder gdc-custom-leaflet-button gdc-custom-leaflet-button-left");
         <a href="#" onClick={this.handleDelete} uk-icon="icon: trash"></a>
         container.type = "button";
         container.title = "No cat";
