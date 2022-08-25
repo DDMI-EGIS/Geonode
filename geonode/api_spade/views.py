@@ -36,22 +36,20 @@ class ResourceCustomListView(generics.ListAPIView):
 
         # GET parameters
         param_bbox = self.request.GET.get('bbox')
-        param_adb_themes = self.request.GET.get('adb_themes')
+        param_categories = self.request.GET.get('categories')
         param_search = self.request.GET.get('search')
-        param_adb_region= self.request.GET.get('rcode')
-        param_adb_country= self.request.GET.get('ccode')
-        param_adb_subdivision= self.request.GET.get('scode')
-        param_adb_date_begin= self.request.GET.get('date_begin')
-        param_adb_date_end= self.request.GET.get('date_end')
+        param_regions= self.request.GET.get('regions')
+        param_date_begin= self.request.GET.get('date_begin')
+        param_date_end= self.request.GET.get('date_end')
 
         # BBOX filter
         if param_bbox  != None and param_search != '':
             queryset = filter_bbox(queryset,param_bbox)
 
         # ADB theme filter
-        if param_adb_themes != None and param_adb_themes != '':
-            param_adb_themes = param_adb_themes.split(',')
-            queryset = queryset.filter(adb_themes__id__in = param_adb_themes)
+        if param_categories != None and param_categories != '':
+            param_categories = param_categories.split(',')
+            queryset = queryset.filter(category__identifier__in = param_categories)
         
         # Research filter on "title"
         if param_search != None and param_search != '':
@@ -60,27 +58,19 @@ class ResourceCustomListView(generics.ListAPIView):
                 queryset = queryset.filter(title__icontains=keyword)
         
         # date
-        if (param_adb_date_begin != None and param_adb_date_begin != '') and (param_adb_date_end != None and param_adb_date_end != '') :
-            queryset = queryset.filter(date__gt=param_adb_date_begin, date__lt=param_adb_date_end)
-        elif (param_adb_date_begin != None and param_adb_date_begin != ''):
-            queryset = queryset.filter(date__gt=param_adb_date_begin)
-        elif (param_adb_date_end != None and param_adb_date_end != ''):
-            queryset = queryset.filter(date__lt=param_adb_date_end)
+        if (param_date_begin != None and param_date_begin != '') and (param_date_end != None and param_date_end != '') :
+            queryset = queryset.filter(date__gt=param_date_begin, date__lt=param_date_end)
+        elif (param_date_begin != None and param_date_begin != ''):
+            queryset = queryset.filter(date__gt=param_date_begin)
+        elif (param_date_end != None and param_date_end != ''):
+            queryset = queryset.filter(date__lt=param_date_end)
 
         # Region
-        if param_adb_region != None and param_adb_region != '':
-            queryset = queryset.filter(adb_geospatdivision__rcode=param_adb_region)
-        
-            # Country
-            if param_adb_country != None and param_adb_country != '':
-                queryset = queryset.filter(adb_geospatdivision__ccode=param_adb_country)
+        if param_regions != None and param_regions != '':
+            param_regions = param_regions.split(',')
+            print(param_regions)
+            queryset = queryset.filter(regions__lft__gt=param_regions[0], regions__rght__lt=param_regions[1])
                 
-                # Subdivision
-                if param_adb_subdivision != None and param_adb_subdivision != '':
-                    queryset = queryset.filter(adb_geospatdivision__scode=param_adb_subdivision)
-                
-
-        
         return queryset.values('pk').distinct().order_by('title')
 
 class ADBGeospatdivisionRegionCustomListView(generics.ListAPIView):
