@@ -202,7 +202,7 @@ class LegendItem extends React.Component {
     }
 
     componentDidMount() {
-        fetch( DOMAIN_NAME_FULL + "api/spade/resource_detail/" + this.props.id + "/")
+        fetch( DOMAIN_NAME_FULL + "gdc/api/resource_detail/" + this.props.id + "/")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -336,14 +336,14 @@ class LegendItem extends React.Component {
                                         <button className="uk-modal-close-default" type="button" data-uk-close></button>
                                     </div>
                                     <div className="uk-width-1-3@m uk-flex-first">
-                                        <ImgPlus key={this.state.thumbnail_url} src={this.state.thumbnail_url} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
+                                        <ImgPlus key={uuidv4()} src={this.state.thumbnail_url.replace('http://', window.location.protocol).replace('https://', window.location.protocol)} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div data-uk-tooltip="Click to enlarge" data-uk-lightbox>
                             <a data-type="image" href={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=false&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} >
-                                <ImgPlus key={this.state.thumbnail_url} src={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=true&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} width="500" height="500" alt="Legend"></ImgPlus>
+                                <ImgPlus key={uuidv4()} src={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=true&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} width="500" height="500" alt="Legend"></ImgPlus>
                             </a>
                         </div>
                     </div>
@@ -598,7 +598,7 @@ class SelectMultipleList extends React.Component {
     }
 
     componentDidMount() {
-        fetch(DOMAIN_NAME_FULL + this.props.endpoint) // '/api/spade/adb_themes')
+        fetch(DOMAIN_NAME_FULL + this.props.endpoint) // '/gdc/api/adb_themes')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -625,7 +625,7 @@ class SelectMultipleList extends React.Component {
             var choices_ordered = this.state.choices.sort((a, b) => a.position_index - b.position_index)
             for (var i = 0; i < choices_ordered.length; i++) {
                 var item = choices_ordered[i];
-                item["icon_img"] = item["icon_img"].replace('http://', 'https://')
+                item["icon_img"] = item["icon_img"].replace('http://', window.location.protocol).replace('https://', window.location.protocol)
                 list_items.push(
                     <SelectMultipleListItem key={item["identifier"]} code={item["identifier"]} parent={this.props.filter_key} icon={item["icon_img"]} name={item["description_en"]} item_id={item["identifier"]}></SelectMultipleListItem>
                 )
@@ -698,12 +698,15 @@ class SelectMultipleListItem extends React.Component {
     render() {
 
         // Loading option parameters
+        var icon_url = new URL(this.props.icon)
+        icon_url = icon_url.pathname
+        console.log(DOMAIN_NAME_FULL + icon_url)
        
         if(this.state.active){
-            var itemDom = <img className="uk-icon-image spade-custom-theme-icon-selected" src={this.props.icon} width="20px" height="20px" data-uk-svg="" ></img>
+            var itemDom = <img className="uk-icon-image spade-custom-theme-icon-selected" src={DOMAIN_NAME_FULL + icon_url.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
         }
         else {
-            var itemDom = <img className="uk-icon-image spade-custom-theme-icon" src={this.props.icon} width="20px" height="20px" data-uk-svg="" ></img>
+            var itemDom = <img className="uk-icon-image spade-custom-theme-icon" src={DOMAIN_NAME_FULL + icon_url.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
         }
 
 
@@ -850,7 +853,7 @@ class ImgPlus extends React.Component {
 
         if(this.state.status == 'loading'){
             spinnerDom.push(
-                <p key={this.props.key} className="uk-padding-small uk-margin-remove uk-text-small"><span data-uk-spinner="ratio: 0.8"></span> &nbsp; {altText} loading...</p>
+                <p key={this.props.src} className="uk-padding-small uk-margin-remove uk-text-small"><span data-uk-spinner="ratio: 0.8"></span> &nbsp; {altText} loading...</p>
             )
         }
         else{ spinnerDom = []}
@@ -883,7 +886,7 @@ class ResultItem extends React.Component {
 
     
     componentDidMount() {
-        fetch(DOMAIN_NAME_FULL + "api/spade/resource_detail/"+this.props.pk+"/")
+        fetch(DOMAIN_NAME_FULL + "gdc/api/resource_detail/"+this.props.pk+"/")
         .then(res => res.json())
         .then(
             (result) => {
@@ -1022,7 +1025,7 @@ class ResultItem extends React.Component {
                                     <button className="uk-modal-close-default" type="button" data-uk-close></button>
                                 </div>
                                 <div className="uk-width-1-3@m uk-flex-first">
-                                    <ImgPlus key={this.state.thumbnail_url} src={this.state.thumbnail_url} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
+                                    <ImgPlus key={uuidv4()} src={this.state.thumbnail_url.replace('http://', window.location.protocol).replace('https://', window.location.protocol)} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
                                 </div>
                             </div>
                         </div>
@@ -1048,7 +1051,7 @@ class ResultItem extends React.Component {
 // Class used to manage and refresh URL filters
 class FilterManager {
     constructor(){
-        this.url = new URL(DOMAIN_NAME_FULL + "api/spade/resource_list/")
+        this.url = new URL(DOMAIN_NAME_FULL + "gdc/api/resource_list/")
         this.bboxFilterActive = true
         this.bboxFilterValue = ''
     }
@@ -1292,14 +1295,19 @@ function toTitleCase(str) {
     );
 }
 
+function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
 
 // ==================================================================================================================
 // ================================================ MAIN JS SCRIPT ==================================================
 // ==================================================================================================================
 
 // Global variables
-var DOMAIN_NAME = 'geonode.spade-staging.egis-eau-sas.fr'
-var DOMAIN_NAME_FULL = 'https://'+DOMAIN_NAME+'/'
+var DOMAIN_NAME_FULL = window.location.origin + '/'
 //window.location.hostname
 
 // Preventing form submission
@@ -1451,7 +1459,7 @@ var regionFilter = ReactDOM.render(
    document.querySelector('#region_filter_container')
 );
 var categorieFilter = ReactDOM.render(
-    <SelectMultipleList id='categories_filter' filter_key='categories' endpoint='/api/v2/categories' verbose_name='Data theme'></SelectMultipleList>,
+    <SelectMultipleList id='categories_filter' filter_key='categories' endpoint='api/v2/categories' verbose_name='Data theme'></SelectMultipleList>,
     document.querySelector('#categorie_filter_container')
 );
 var searchFilter = ReactDOM.render(

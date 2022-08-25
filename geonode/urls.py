@@ -255,7 +255,7 @@ urlpatterns += [
     url(r'^metadata_update_redirect$', views.metadata_update_redirect, name='metadata_update_redirect'),
 ]
 
-# Addition of SPADE custom API
+# django-geonode-gdc API endpoints
 urlpatterns += [  
-    path('api/spade/', include('geonode.api_spade.urls')),
+    path('gdc/', include('geonode.gdc.urls')),
 ]

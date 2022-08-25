@@ -9,7 +9,6 @@ Theses steps allow to display on the server.
     * change HTTPS_HOST to ```https://example.com```
     * change SITEURL to ```https://example.com```
 
-
 3. Run (see next section)
 
 ## How to run

@@ -96,60 +96,6 @@ from geonode.storage.manager import storage_manager
 
 logger = logging.getLogger(__name__)
 
-# ADB SPADE CUSTOM
-class ADBGeospatdivision(models.Model):
-    rcode = models.CharField(
-        max_length=10,
-        verbose_name='Region Code'
-    )
-    rname = models.CharField(
-        max_length=200,
-        verbose_name='Region Name'
-    )
-    ccode = models.CharField(
-        max_length=10,
-        verbose_name='Country Code'
-    )
-    cname = models.CharField(
-        max_length=200,
-        verbose_name='Country Name'
-    )
-    scode = models.CharField(
-        max_length=10,
-        verbose_name='Subdivision Code'
-    )
-    sname = models.CharField(
-        max_length=200,
-        verbose_name='Subdivision Name'
-    )
-
-    def __str__(self):
-        return '%s, %s, %s' % (self.rname, self.cname, self.sname)
-    
-
-class ADBTheme(models.Model):
-    index = models.IntegerField(
-        verbose_name='Position index',
-    )
-    code = models.CharField(
-        max_length=3,
-        verbose_name='Theme code',
-    )
-    name = models.CharField(
-        max_length=200,
-        verbose_name='Theme name'
-    )
-    desc = models.TextField(
-        verbose_name='Theme description'
-    )
-    icon = models.FileField(
-        verbose_name='Theme icon'
-    )
-        
-
-    def __str__(self):
-        return self.name
-
 
 class ContactRole(models.Model):
     """
@@ -218,6 +164,8 @@ class TopicCategory(models.Model):
         'GeoNode description', default='', null=True)
     is_choice = models.BooleanField(default=True)
     fa_class = models.CharField(max_length=64, default='fa-times')
+    
+    # Required for GDC
     position_index = models.IntegerField(verbose_name='Position index',null=True, blank=True)
     icon_img = models.FileField(verbose_name='Image icon',null=True, blank=True)
 
@@ -1137,20 +1085,6 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
         null=True,
         blank=True,
         help_text=extra_metadata_help_text)
-
-    # Section 10 : SPADE Specific fields
-    # ADB SPADE CUSTOM
-    adb_themes = models.ManyToManyField(
-        ADBTheme,
-        blank=True,
-        null=True,
-    )
-    adb_geospatdivision = models.ForeignKey(
-        ADBGeospatdivision,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-    )
 
     objects = ResourceBaseManager()
 
