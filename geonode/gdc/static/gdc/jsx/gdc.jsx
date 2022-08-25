@@ -336,7 +336,7 @@ class LegendItem extends React.Component {
                                         <button className="uk-modal-close-default" type="button" data-uk-close></button>
                                     </div>
                                     <div className="uk-width-1-3@m uk-flex-first">
-                                        <ImgPlus key={uuidv4()} src={this.state.thumbnail_url.replace('http://', window.location.protocol).replace('https://', window.location.protocol)} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
+                                        <ImgPlus key={uuidv4()} src={this.state.thumbnail_url.replace('http://', window.location.protocol + '://').replace('https://', window.location.protocol + '://')} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
                                     </div>
                                 </div>
                             </div>
@@ -390,7 +390,6 @@ class SelectGroupTree extends React.Component {
         
         if (evt.target.value != ''){
             var tree_range = evt.target.value.split(',')
-            console.log(tree_range)
 
             if (level == 1) {
                 current_state['filter_level2'] = 'filter{lft.gt}=' + tree_range[0] + '&filter{rght.lt}=' + tree_range[1] + '&filter{level}=2&sort[]=name&page_size=50'
@@ -424,10 +423,6 @@ class SelectGroupTree extends React.Component {
             
         }
 
-        console.log(level)
-
-
-
     }
 
     handleChangeChk(){
@@ -456,8 +451,6 @@ class SelectGroupTree extends React.Component {
         var region_filters = []
 
         if(!this.state.filterByMapExtent){
-
-            console.log('treeLevel' + this.state.treeLevel)
 
             region_filters.push(
                 < SelectList
@@ -625,9 +618,11 @@ class SelectMultipleList extends React.Component {
             var choices_ordered = this.state.choices.sort((a, b) => a.position_index - b.position_index)
             for (var i = 0; i < choices_ordered.length; i++) {
                 var item = choices_ordered[i];
-                item["icon_img"] = item["icon_img"].replace('http://', window.location.protocol).replace('https://', window.location.protocol)
+                var icon_url = new URL(item["icon_img"])
+                icon_url = icon_url.pathname
+
                 list_items.push(
-                    <SelectMultipleListItem key={item["identifier"]} code={item["identifier"]} parent={this.props.filter_key} icon={item["icon_img"]} name={item["description_en"]} item_id={item["identifier"]}></SelectMultipleListItem>
+                    <SelectMultipleListItem key={item["identifier"]} code={item["identifier"]} parent={this.props.filter_key} icon={icon_url} name={item["description_en"]} item_id={item["identifier"]}></SelectMultipleListItem>
                 )
             }
         }
@@ -697,16 +692,11 @@ class SelectMultipleListItem extends React.Component {
 
     render() {
 
-        // Loading option parameters
-        var icon_url = new URL(this.props.icon)
-        icon_url = icon_url.pathname
-        console.log(DOMAIN_NAME_FULL + icon_url)
-       
         if(this.state.active){
-            var itemDom = <img className="uk-icon-image spade-custom-theme-icon-selected" src={DOMAIN_NAME_FULL + icon_url.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
+            var itemDom = <img className="uk-icon-image spade-custom-theme-icon-selected" src={DOMAIN_NAME_FULL + this.props.icon.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
         }
         else {
-            var itemDom = <img className="uk-icon-image spade-custom-theme-icon" src={DOMAIN_NAME_FULL + icon_url.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
+            var itemDom = <img className="uk-icon-image spade-custom-theme-icon" src={DOMAIN_NAME_FULL + this.props.icon.substring(1)} width="20px" height="20px" data-uk-svg="" ></img>
         }
 
 
@@ -836,7 +826,6 @@ class ImgPlus extends React.Component {
     }
 
     handleOnLoad(){
-        console.log('loaded')
         this.setState({ status:'ready'})
     }
 
@@ -1025,7 +1014,7 @@ class ResultItem extends React.Component {
                                     <button className="uk-modal-close-default" type="button" data-uk-close></button>
                                 </div>
                                 <div className="uk-width-1-3@m uk-flex-first">
-                                    <ImgPlus key={uuidv4()} src={this.state.thumbnail_url.replace('http://', window.location.protocol).replace('https://', window.location.protocol)} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
+                                    <ImgPlus key={uuidv4()} src={this.state.thumbnail_url.replace('http://', window.location.protocol + '://').replace('https://', window.location.protocol + '://')} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
                                 </div>
                             </div>
                         </div>
@@ -1062,7 +1051,6 @@ class FilterManager {
         if(this.bboxFilterActive){
             this.url.searchParams.delete('regions')
             this.url.searchParams.append('bbox', this.bboxFilterValue)
-            console.log(this.url.toString())
         }
         else{
             this.url.searchParams.delete('bbox')
@@ -1420,7 +1408,6 @@ flatpickr(
     '#flatpickr-after', {
         enableTime: false,
         onChange: function (selectedDates, dateStr, instance) {
-            console.log(selectedDates.length)
             selectedDatesMain = selectedDates
             if (selectedDates.length == 1){
                 mainFilterManager.setFilter('date_begin', selectedDates[0].toISOString().substring(0, 10))
@@ -1436,7 +1423,6 @@ flatpickr(
     '#flatpickr-before', {
     enableTime: false,
     onChange: function (selectedDates, dateStr, instance) {
-        console.log(selectedDates.length)
         selectedDatesMain = selectedDates
         if (selectedDates.length == 1) {
             mainFilterManager.setFilter('date_end', selectedDates[0].toISOString().substring(0, 10))
