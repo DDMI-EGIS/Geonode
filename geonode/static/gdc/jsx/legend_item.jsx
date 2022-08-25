@@ -298,14 +298,14 @@ class LegendItem extends React.Component {
         if (this.state.status == 'ready') {
 
             var catList = []
-            for (var i = 0; i < this.state.layerData.adb_themes.length; i++) {
-                if (i == this.state.layerData.adb_themes.length - 1) {
-                    catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code})</span>)
-                }
-                else {
-                    catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code}),</span>)
-                }
-            }
+            // for (var i = 0; i < this.state.layerData.adb_themes.length; i++) {
+            //     if (i == this.state.layerData.adb_themes.length - 1) {
+            //         catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code})</span>)
+            //     }
+            //     else {
+            //         catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code}),</span>)
+            //     }
+            // }
 
             return (
                 <li id={"legend-item-" + this.props.layerid} layername={this.props.layerid} className="uk-open uk-padding-small uk-background-muted">
@@ -336,14 +336,14 @@ class LegendItem extends React.Component {
                                         <button className="uk-modal-close-default" type="button" data-uk-close></button>
                                     </div>
                                     <div className="uk-width-1-3@m uk-flex-first">
-                                        <ImgPlus src={this.state.thumbnail_url} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
+                                        <ImgPlus key={this.state.thumbnail_url} src={this.state.thumbnail_url} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div data-uk-tooltip="Click to enlarge" data-uk-lightbox>
                             <a data-type="image" href={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=false&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} >
-                                <ImgPlus src={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=true&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} width="500" height="500" alt="Legend"></ImgPlus>
+                                <ImgPlus key={this.state.thumbnail_url} src={DOMAIN_NAME_FULL + "geoserver/ows?&LAYER=" + this.state.layerData.alternate + "&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&transparent=true&format=image/png&LEGEND_OPTIONS=forceLabels:on;dpi=91;"} width="500" height="500" alt="Legend"></ImgPlus>
                             </a>
                         </div>
                     </div>
@@ -371,32 +371,62 @@ class SelectGroupTree extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rcode:'',
-            ccode:'',
-            scode:'',
+            treeLevel:1,
+            filter_level2: 'filter{lft.gt}=1&filter{rght.lt}=8000000&filter{level}=2&page_size=50',
+            filter_level2_light: '',
+            filter_level3: 'filter{lft.gt}=1&filter{rght.lt}=8000000&filter{level}=3&page_size=50',
+            filter_level3_light: '',
             filterByMapExtent:true,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeChk = this.handleChangeChk.bind(this);
+        //this.composeFilter = this.composeFilter.bind(this);
     }
 
-    handleChange(evt, filter) {
+    handleChange(evt, level) {
 
         // Setting the new filter value
         var current_state = this.state
-        console.log(evt.target.value)
-        current_state[filter] = evt.target.value
         
-        // Case region is reset
-        if(filter=='rcode'){
-            current_state['ccode']=''
+        if (evt.target.value != ''){
+            var tree_range = evt.target.value.split(',')
+            console.log(tree_range)
+
+            if (level == 1) {
+                current_state['filter_level2'] = 'filter{lft.gt}=' + tree_range[0] + '&filter{rght.lt}=' + tree_range[1] + '&filter{level}=2&sort[]=name&page_size=50'
+                current_state['filter_level2_light'] = evt.target.value
+                mainFilterManager.setFilter(this.props.filter_key, evt.target.value)
+            }
+            else if (level == 2) {
+                current_state['filter_level3'] = 'filter{lft.gt}=' + tree_range[0] + '&filter{rght.lt}=' + tree_range[1] + '&filter{level}=3&sort[]=name&page_size=50'
+                current_state['filter_level3_light'] = evt.target.value
+                mainFilterManager.setFilter(this.props.filter_key, evt.target.value)
+            }
+
+            current_state['treeLevel'] = level + 1
+
+            // Set state to refresh element
+            this.setState(current_state)
+        }
+        else {
+            current_state['treeLevel'] = level
+            // Set state to refresh element
+            this.setState(current_state)
+            if (level == 1){
+                mainFilterManager.deleteFilter(this.props.filter_key)
+            }
+            else if (level==2){
+                mainFilterManager.setFilter(this.props.filter_key, this.state.filter_level2_light)
+            }
+            else if (level ==3){
+                mainFilterManager.setFilter(this.props.filter_key, this.state.filter_level3_light)
+            }
+            
         }
 
-        // Set state to refresh element
-        this.setState(current_state)
+        console.log(level)
 
-        // Update layer filters
-        mainFilterManager.setFilter(filter, evt.target.value)
+
 
     }
 
@@ -407,9 +437,9 @@ class SelectGroupTree extends React.Component {
         current_state['filterByMapExtent'] = !current_state['filterByMapExtent']
         if(current_state['filterByMapExtent']){
             this.setState({
-                rcode: '',
-                ccode: '',
-                scode: '',
+                treeLevel: 1,
+                filter_level2: 'filter{lft.gt}=0&filter{rght.lt}=8000000&filter{level}=2&sort[]=name&page_size=50',
+                filter_level3: 'filter{lft.gt}=0&filter{rght.lt}=8000000&filter{level}=3&sort[]=name&page_size=50',
                 filterByMapExtent: true,
             })
         }
@@ -419,67 +449,64 @@ class SelectGroupTree extends React.Component {
 
         // TODO: Refresh layer filters
         mainFilterManager.toggleBBOXFilterActive()
+        
     }
-
     
     render(){
-        var geospatdivision_filters = []
+        var region_filters = []
 
-        if(this.state.filterByMapExtent){
-            geospatdivision_filters = []
-        }
-        else {
-            geospatdivision_filters.push(
+        if(!this.state.filterByMapExtent){
+
+            console.log('treeLevel' + this.state.treeLevel)
+
+            region_filters.push(
                 < SelectList
                     id="region"
-                    src='api/spade/adb_geospatdivision/region/'
+                    key={"1_" + this.state.tree_lft + "_" + this.state.tree_rght}
+                    endpoint='api/v2/regions'
+                    filter='filter{lft.gt}=0&filter{rght.lt}=8000000&filter{level}=1&sort[]=name&page_size=50'
+                    level={1}
                     verbose_name='Select region'
-                    code_field='rcode'
-                    name_field='rname'
-                    handleChange={this.handleChange} >
+                    handleChange={this.handleChange}>
                 </SelectList >
             )
 
-            if (this.state.rcode != '') {
-                geospatdivision_filters.push(
+            if (this.state.treeLevel >= 2) {
+                region_filters.push(
                     <SelectList
                         id="country"
-                        key={'adb_GeospatdivisionCountry_' + this.state.rcode}
-                        src='api/spade/adb_geospatdivision/country/'
+                        key={this.state.filter_level2}
+                        endpoint='api/v2/regions'
+                        filter={this.state.filter_level2}
+                        level={2}
                         verbose_name='Select country'
-                        code_field='ccode'
-                        name_field='cname'
-                        filter={this.state.rcode}
                         handleChange={this.handleChange}>
                     </SelectList>
                 )
             }
 
-            if (this.state.ccode != '') {
-                geospatdivision_filters.push(
+            if (this.state.treeLevel >= 3) {
+                region_filters.push(
                     <SelectList
                         id="subdivision"
-                        key={'adb_GeospatdivisionSubdivision_' + this.state.rcode + '_' + this.state.ccode}
-                        src='api/spade/adb_geospatdivision/subdivision/'
+                        key={this.state.filter_level3}
+                        endpoint='api/v2/regions'
+                        filter={this.state.filter_level3}
+                        level={3}
                         verbose_name='Select subdivision'
-                        code_field='scode'
-                        name_field='sname'
-                        filter={this.state.ccode}
                         handleChange={this.handleChange}>
                     </SelectList>
                 )
             }
         }
         
-
-
         return (
             <div className="uk-width-1-1 uk-margin-small-bottom">   
                 <div className="uk-margin-remove">
                     <label className="uk-form-small uk-padding-remove"><input className="uk-checkbox" type="checkbox" onClick={this.handleChangeChk} defaultChecked={this.state.filterByMapExtent}/> Map extent</label>
                 </div>
                 <div className="uk-margin-remove">
-                    {geospatdivision_filters}
+                    {region_filters}
                 </div>
             </div>
         )
@@ -499,15 +526,14 @@ class SelectList extends React.Component {
     } 
 
     componentDidMount() {
-        var url = new URL(DOMAIN_NAME_FULL + this.props.src)
-        url.searchParams.append('filter', this.props.filter)
+        var url = DOMAIN_NAME_FULL + this.props.endpoint +'/?' + this.props.filter
         fetch(url)
             .then(res => res.json())
             .then(
                 (result) => {
                     this.setState({
                         status:'ready',
-                        choices:result,
+                        choices:result.regions,
                     })
                 },
                 (error) => {
@@ -526,7 +552,7 @@ class SelectList extends React.Component {
         var list_items = []
         for (var i = 0; i < this.state.choices.length; i++) {
             var item = this.state.choices[i];
-            list_items.push(<option key={item[this.props.code_field]} value={item[this.props.code_field]}>{item[this.props.name_field]}</option>)
+            list_items.push(<option key={item['code']} value={[item['lft'],item['rght'], item['code']]}>{item['name']}</option>)
         }
         
         if (this.state.status == 'ready'){
@@ -534,7 +560,7 @@ class SelectList extends React.Component {
                 <form>
                     <fieldset className="uk-fieldset">
                         <div className="uk-margin-small-bottom">
-                            <select id={this.props.id + "_filter"} className="uk-select uk-form-small" onChange={evt => this.props.handleChange(evt, this.props.code_field)}>
+                            <select id={this.props.id + "_filter"} className="uk-select uk-form-small" onChange={evt => this.props.handleChange(evt, this.props.level)}>
                                 <option value="">{this.props.verbose_name}</option>
                                 {list_items}
                             </select>
@@ -572,13 +598,13 @@ class SelectMultipleList extends React.Component {
     }
 
     componentDidMount() {
-        fetch(DOMAIN_NAME_FULL + "api/spade/" + this.props.id + "/")
+        fetch(DOMAIN_NAME_FULL + this.props.endpoint) // '/api/spade/adb_themes')
             .then(res => res.json())
             .then(
                 (result) => {
                     this.setState({
                         status: 'ready',
-                        choices: result,
+                        choices: result.categories,
                     })
                 },
                 (error) => {
@@ -595,12 +621,17 @@ class SelectMultipleList extends React.Component {
 
         // Loading option parameters
         var list_items = []
-        for (var i = 0; i < this.state.choices.length; i++) {
-            var item = this.state.choices[i];
-            list_items.push(
-                <SelectMultipleListItem key={item["id"]} code={item["code"]} parent={this.props.id} icon={item["icon"]} name={item["name"]} item_id={item["id"]}></SelectMultipleListItem>
-            )
+        if (Array.isArray(this.state.choices)){
+            var choices_ordered = this.state.choices.sort((a, b) => a.position_index - b.position_index)
+            for (var i = 0; i < choices_ordered.length; i++) {
+                var item = choices_ordered[i];
+                item["icon_img"] = item["icon_img"].replace('http://', 'https://')
+                list_items.push(
+                    <SelectMultipleListItem key={item["identifier"]} code={item["identifier"]} parent={this.props.filter_key} icon={item["icon_img"]} name={item["description_en"]} item_id={item["identifier"]}></SelectMultipleListItem>
+                )
+            }
         }
+
 
         if (this.state.status == 'ready') {
             return (
@@ -698,7 +729,7 @@ class SearchBar extends React.Component {
     }
 
     handleChange(evt) {
-        const filter_key = this.props.id
+        const filter_key = this.props.filter_key
         const filter_value = evt.target.value;
 
         // Updating filter options
@@ -819,7 +850,7 @@ class ImgPlus extends React.Component {
 
         if(this.state.status == 'loading'){
             spinnerDom.push(
-                <p className="uk-padding-small uk-margin-remove uk-text-small"><span data-uk-spinner="ratio: 0.8"></span> &nbsp; {altText} loading...</p>
+                <p key={this.props.key} className="uk-padding-small uk-margin-remove uk-text-small"><span data-uk-spinner="ratio: 0.8"></span> &nbsp; {altText} loading...</p>
             )
         }
         else{ spinnerDom = []}
@@ -954,14 +985,14 @@ class ResultItem extends React.Component {
         if (this.state.status == 'ready') {
 
             var catList = []
-            for (var i = 0; i < this.state.layerData.adb_themes.length; i++){
-                if(i == this.state.layerData.adb_themes.length-1){
-                    catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code})</span>)
-                }
-                else {
-                    catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code}),</span>)
-                }
-            }
+            // for (var i = 0; i < this.state.layerData.adb_themes.length; i++) {
+            //     if (i == this.state.layerData.adb_themes.length - 1) {
+            //         catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code})</span>)
+            //     }
+            //     else {
+            //         catList.push(<span key={this.state.layerData.adb_themes[i].code}>{this.state.layerData.adb_themes[i].name} ({this.state.layerData.adb_themes[i].code}),</span>)
+            //     }
+            // }
 
             var domToRender = (
                 <div key={this.props.pk} className=" uk-animation-fade uk-margin-small-bottom uk-padding-small uk-card uk-card-default uk-card-body uk-card-hover " onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
@@ -973,12 +1004,7 @@ class ResultItem extends React.Component {
                     </ul>
 
                     <div className="uk-padding-remove uk-grid-small" data-uk-grid>
-                        <div className="uk-width-2-5@xl">
-                            <ImgPlus src={this.state.thumbnail_url} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
-                        </div>
-                        <div className="uk-width-3-5@xl">
-                            <p className="uk-text-justify uk-text-small">{this.state.layerData.raw_abstract.substring(0, 150)}...</p>
-                        </div>
+                        <p className="uk-text-justify uk-text-small">{this.state.layerData.raw_abstract.substring(0, 150)}...</p>
                     </div>
 
                     <div id={"modal_layerresult_" + this.props.pk} className="uk-flex-top uk-modal-container" data-uk-modal>
@@ -996,7 +1022,7 @@ class ResultItem extends React.Component {
                                     <button className="uk-modal-close-default" type="button" data-uk-close></button>
                                 </div>
                                 <div className="uk-width-1-3@m uk-flex-first">
-                                    <img src={this.state.thumbnail_url} width="500" height="500" alt="Image"></img>
+                                    <ImgPlus key={this.state.thumbnail_url} src={this.state.thumbnail_url} width="500" height="500" alt="Layer thumbnail"></ImgPlus>
                                 </div>
                             </div>
                         </div>
@@ -1031,9 +1057,7 @@ class FilterManager {
        
         this.bboxFilterActive = !this.bboxFilterActive
         if(this.bboxFilterActive){
-            this.url.searchParams.delete('rcode')
-            this.url.searchParams.delete('ccode')
-            this.url.searchParams.delete('scode')
+            this.url.searchParams.delete('regions')
             this.url.searchParams.append('bbox', this.bboxFilterValue)
             console.log(this.url.toString())
         }
@@ -1422,23 +1446,19 @@ var legendComponent = ReactDOM.render(
     <Legend id='legend_main_container'></Legend>, 
     document.querySelector('#legend_container')
 );
-var adbGeospatdivisionRegionFilter = ReactDOM.render(
-   <SelectGroupTree></SelectGroupTree>,
-   document.querySelector('#adb_geospatdivision_filter_container')
+var regionFilter = ReactDOM.render(
+    <SelectGroupTree id='regions_filter' filter_key='regions'></SelectGroupTree>,
+   document.querySelector('#region_filter_container')
 );
-var adbThemeFilter = ReactDOM.render(
-    <SelectMultipleList id='adb_themes' verbose_name='Data theme'></SelectMultipleList>,
-    document.querySelector('#adb_theme_filter_container')
+var categorieFilter = ReactDOM.render(
+    <SelectMultipleList id='categories_filter' filter_key='categories' endpoint='/api/v2/categories' verbose_name='Data theme'></SelectMultipleList>,
+    document.querySelector('#categorie_filter_container')
 );
-var adbSearchFilter = ReactDOM.render(
-    <SearchBar id='search' verbose_name='Search layer name'></SearchBar>,
+var searchFilter = ReactDOM.render(
+    <SearchBar id='search_filter' filter_key='search' verbose_name='Search layer name'></SearchBar>,
     document.querySelector('#search_filter_container')
 );
 var mainResultList = ReactDOM.render(
-    <ResultList id='mainResultList'></ResultList>,
-    document.querySelector('#result_container')
+    <ResultList id='results_list'></ResultList>,
+    document.querySelector('#main_result_list_container')
 );
-
-
-
-
