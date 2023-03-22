@@ -202,3 +202,8 @@ if settings.MONITORING_ENABLED:
 urlpatterns += [
     url(r"^metadata_update_redirect$", views.metadata_update_redirect, name="metadata_update_redirect"),
 ]
+
+# django-geonode-gdc API endpoints
+urlpatterns += [  
+    path('gdc/', include('geonode.gdc.urls')),
+]

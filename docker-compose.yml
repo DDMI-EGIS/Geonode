@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.4'
 
 # Common Django template for GeoNode and Celery services below
 x-common-django:
@@ -15,10 +15,8 @@ x-common-django:
     - data:/data
     - tmp:/tmp
   depends_on:
-    db:
-      condition: service_healthy
-    geoserver:
-      condition: service_healthy
+    - db
+    - geoserver
 
 services:
 
@@ -38,7 +36,7 @@ services:
     environment:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
-    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini --logto /usr/src/geonode/log.log"
 
   # Celery worker that executes celery tasks created by Django.
   celery:
@@ -64,14 +62,19 @@ services:
       - HTTP_PORT=${HTTP_PORT}
       - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
       - RESOLVER=127.0.0.11
-    ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+    # ports:
+    #   - "${HTTP_PORT}:80"
+    #   - "${HTTPS_PORT}:443"
     volumes:
       - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
       - statics:/mnt/volumes/statics
     restart: on-failure
+    networks:
+      kobo-fe-network:
+        aliases:
+          - nginx4${COMPOSE_PROJECT_NAME}
+      default:
 
   # Gets and installs letsencrypt certificates
   letsencrypt:
@@ -107,10 +110,8 @@ services:
       - tmp:/tmp
     restart: on-failure
     depends_on:
-      db:
-        condition: service_healthy
-      data-dir-conf:
-        condition: service_healthy
+      - db
+      - data-dir-conf
 
   data-dir-conf:
     image: geonode/geoserver_data:2.23.x
@@ -169,3 +170,8 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-tmp
   rabbitmq:
     name: ${COMPOSE_PROJECT_NAME}-rabbitmq
+
+networks:
+  kobo-fe-network:
+    external:
+      name: kobofe_kobo-fe-network

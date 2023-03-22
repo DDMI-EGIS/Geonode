@@ -141,6 +141,10 @@ class TopicCategory(models.Model):
     gn_description = models.TextField("GeoNode description", default="", null=True)
     is_choice = models.BooleanField(default=True)
     fa_class = models.CharField(max_length=64, default="fa-times")
+    
+    # Required for GDC
+    position_index = models.IntegerField(verbose_name='Position index',null=True, blank=True)
+    icon_img = models.FileField(verbose_name='Image icon',null=True, blank=True)
 
     def __str__(self):
         return self.gn_description
@@ -803,6 +807,8 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
     # and metadata records.
     bbox_polygon = PolygonField(null=True, blank=True)
     ll_bbox_polygon = PolygonField(null=True, blank=True)
+
+
 
     srid = models.CharField(max_length=30, blank=False, null=False, default="EPSG:4326")
 

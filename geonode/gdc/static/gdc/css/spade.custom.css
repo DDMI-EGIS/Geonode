@@ -1,0 +1,118 @@
+/**==========================================================**/
+/**==================== CUSTOM COLORS ========================**/
+/**==========================================================**/
+
+:root {
+    --color-white:#FFFFFF;
+    --color-cultured:#F0F0F0;
+    --color-jet:#333333;
+    --color-sapphire_blue:#0269A5;
+    --color-royal_blue_dark:#001F6D;
+    --color-flirt:#962774;
+    --color-princton_orange:#F47E24;
+    --color-honey_yellow:#FCB414; 
+    --color-green_yrb:#5FAF26; 
+}
+
+
+/**==========================================================**/
+/**==================== LAYER SEARCH PANEL ==================**/
+/**==========================================================**/
+
+.gdc-custom-padding {
+    padding:0.5em;
+}
+
+.gdc-custom-panel {
+    transition: width 0.5s, opacity 0.2s;
+}
+
+#right-panel {
+    width : 0px;
+}
+
+/**=======================================================================**/
+/**==================== CUSTOM LEAFLET BUTTONS LOCATION ==================**/
+/**=======================================================================**/
+
+.gdc-custom-leaflet-button {
+  position:relative;
+  margin-top: 100px;
+  height: 30px;
+  border: none;
+  color: var(--color-jet);
+  background-color: #fff ;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: normal;
+  cursor: pointer;
+  top: -10px;
+}
+
+.gdc-custom-leaflet-button-right {
+    right: -10px;
+    border-bottom-left-radius: 30px;
+}
+
+.gdc-custom-leaflet-button-left {
+    left: -10px;
+    border-bottom-right-radius: 30px;
+}
+
+/**=======================================================================**/
+/**==================== CUSTOM THEME =====================================**/
+/**=======================================================================**/
+
+.gdc-custom-theme-icon {
+    filter: invert(50%) sepia(0%) saturate(1542%) hue-rotate(171deg) brightness(79%) contrast(97%);
+}
+
+.gdc-custom-theme-icon:hover {
+    filter: invert(22%) sepia(94%) saturate(1388%) hue-rotate(179deg) brightness(108%) contrast(98%);
+}
+
+.gdc-custom-theme-icon-selected {
+    filter: invert(22%) sepia(94%) saturate(1388%) hue-rotate(179deg) brightness(108%) contrast(98%);
+}
+
+.gdc-custom-border {
+    border: 1px solid #ececec;
+}
+
+.gdc-custom-border:hover {
+    border: 1px solid #c7c7c7;
+}
+
+
+/**==========================================================**/
+/**==================== SCROLLER ============================**/
+/**==========================================================**/
+
+/* Display scroll gdc-custom-scroller */
+.gdc-custom-scroller {
+    scrollbar-width: thin;
+    overflow-y: scroll;
+}
+
+.gdc-custom-scroller::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: #ffffff;
+    /* or add it to the track */
+    scrollbar-color: #ececec;
+}
+
+/* Add a thumb */
+.gdc-custom-scroller::-webkit-scrollbar-thumb {
+    background: #ececec;
+}
+
+
+/* Do not display scroll gdc-custom-scroller */
+.gdc-custom-noscroller {
+    /*scrollbar-width: thin;*/
+    display: none;
+}
