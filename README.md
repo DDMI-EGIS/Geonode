@@ -6,7 +6,7 @@ The browser source code is availble here:
 
 ![django-geonode-gdc](https://github.com/Inogeo/spade/tree/4.x-gdc/geonode/gdc)
 
-Some instructions to setup easily geonode and drafts guidelines to contribute to this project are given [HERE](README_GDC.md)
+Some instructions to setup easily geonode and drafts guidelines to contribute to this project are given [HERE](README_EGIS.md)
 
 ___
 
