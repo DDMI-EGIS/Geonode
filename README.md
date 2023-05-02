@@ -1,3 +1,24 @@
+# How to use this fork ?
+
+To use the current fork, follow the procedure below
+
+**1. Init repository and submodules**
+
+```sh
+```
+
+**2. Start services**
+
+```sh
+# Load images from registry and develop locally
+docker-compose up
+
+# Build images locally 
+docker-compose -f .\docker-compose-egis-dev.yml up
+```
+
+___
+
 ![GeoNode](https://raw.githubusercontent.com/GeoNode/documentation/master/about/img/geonode-logo_for_readme.gif "GeoNode")
 ![OSGeo Project](https://www.osgeo.cn/qgis/_static/images/osgeoproject.png)
 

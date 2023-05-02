@@ -38,7 +38,7 @@ services:
     environment:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
-    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini" # sleep infinity
 
   # Celery worker that executes celery tasks created by Django.
   celery:

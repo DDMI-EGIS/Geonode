@@ -202,3 +202,13 @@ if settings.MONITORING_ENABLED:
 urlpatterns += [
     url(r"^metadata_update_redirect$", views.metadata_update_redirect, name="metadata_update_redirect"),
 ]
+
+if "geonode.gdc" in settings.INSTALLED_APPS:
+    urlpatterns += [  # '',
+        url(r'^gdc/', include('geonode.gdc.urls')),
+    ]
+
+if "geonode.gssync" in settings.INSTALLED_APPS:
+    urlpatterns += [  # '',
+        url(r'^gssync/', include('geonode.gssync.urls')),
+    ]

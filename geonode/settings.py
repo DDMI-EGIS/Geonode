@@ -2260,3 +2260,5 @@ SUPPORTED_DATASET_FILE_TYPES = [
         "needsFiles": ["shp", "prj", "dbf", "shx", "csv", "tiff", "zip", "xml"],
     },
 ]
+
+INSTALLED_APPS += ('geonode.gssync',)
