@@ -4,8 +4,8 @@ RUN apk add --no-cache openssl inotify-tools
 
 WORKDIR /etc/nginx/
 
-ADD nginx.conf.envsubst nginx.https.available.conf.envsubst ./
-ADD geonode.conf.envsubst ./sites-enabled/
+COPY nginx.conf.envsubst nginx.https.available.conf.envsubst ./
+COPY geonode.conf.envsubst ./sites-enabled/
 
 ADD docker-autoreload.sh docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]

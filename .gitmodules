@@ -1,3 +1,6 @@
 [submodule "geonode/gssync"]
 	path = geonode/gssync
 	url = https://github.com/phardy-egis/django-geonode-gssync.git
+[submodule "geonode/gdc"]
+	path = geonode/gdc
+	url = https://github.com/phardy-egis/django-geonode-gdc-backend.git

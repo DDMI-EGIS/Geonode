@@ -2,19 +2,28 @@
 
 To use the current fork, follow the procedure below
 
-**1. Init repository and submodules**
+**STEP 1.** Init repository and submodules
 
 ```sh
+# Clone repo
+git clone https://github.com/phardy-egis/django-geonode-dev.git
+
+# Move to repo folder
+cd django-geonode-dev
+
+# Update submodules
+git submodule update --init
+
 ```
 
-**2. Start services**
+**STEP 2.** Start services locally
 
 ```sh
 # Load images from registry and develop locally
 docker-compose up
 
 # Build images locally 
-docker-compose -f .\docker-compose-egis-dev.yml up
+docker-compose -f .\docker-compose-egis.yml up
 ```
 
 ___

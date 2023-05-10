@@ -38,7 +38,9 @@ services:
     environment:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
-    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini" # sleep infinity
+    command: sleep infinity
+    ports:
+      - "${HTTP_PORT}:80"
 
   # Celery worker that executes celery tasks created by Django.
   celery:
@@ -64,9 +66,9 @@ services:
       - HTTP_PORT=${HTTP_PORT}
       - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
       - RESOLVER=127.0.0.11
-    ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+    # ports:
+    #   - "${HTTP_PORT}:80"
+    #   - "${HTTPS_PORT}:443"
     volumes:
       - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
