@@ -77,18 +77,18 @@ services:
     restart: on-failure
 
   # Gets and installs letsencrypt certificates
-  # letsencrypt:
-  #   image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.2-letsencrypt
-  #   # build: ./scripts/docker/letsencrypt/
-  #   container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
-  #   environment:
-  #     - HTTPS_HOST=${HTTPS_HOST}
-  #     - HTTP_HOST=${HTTP_HOST}
-  #     - ADMIN_EMAIL=${ADMIN_EMAIL}
-  #     - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
-  #   volumes:
-  #     - nginx-certificates:/geonode-certificates
-  #   restart: on-failure
+  letsencrypt:
+    image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.2-letsencrypt
+    build: ./scripts/docker/letsencrypt/
+    container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
+    environment:
+      - HTTPS_HOST=${HTTPS_HOST}
+      - HTTP_HOST=${HTTP_HOST}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
+    volumes:
+      - nginx-certificates:/geonode-certificates
+    restart: on-failure
 
   # Geoserver backend
   geoserver:
