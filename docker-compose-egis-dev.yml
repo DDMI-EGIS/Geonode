@@ -52,7 +52,7 @@ services:
     environment:
       - IS_CELERY=True
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
-    command: "celery-cmd"
+    command: "python3 manage.py celery"
 
   # Nginx is serving django static and media files and proxies to django and geonode
   geonode:
@@ -151,6 +151,16 @@ services:
     volumes:
       - rabbitmq:/var/lib/rabbitmq
     restart: on-failure
+
+  flower:
+    image: mher/flower
+    ports:
+      - 5555:5555
+    environment:
+      CELERY_BROKER_URL: ${BROKER_URL}
+      CELERY_RESULT_BACKEND: ${BROKER_URL}
+    depends_on:
+      - django
 
 volumes:
   statics:
