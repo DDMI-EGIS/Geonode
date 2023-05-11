@@ -4,3 +4,6 @@
 [submodule "geonode/gdc"]
 	path = geonode/gdc
 	url = https://github.com/phardy-egis/django-geonode-gdc-backend.git
+[submodule "geonode/userdetails"]
+	path = geonode/userdetails
+	url = https://github.com/phardy-egis/django-geonode-userdetails.git

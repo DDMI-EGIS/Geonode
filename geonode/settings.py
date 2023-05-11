@@ -2268,3 +2268,4 @@ SUPPORTED_DATASET_FILE_TYPES = [
 
 INSTALLED_APPS += ('geonode.gssync',)
 INSTALLED_APPS += ('geonode.gdc',)
+INSTALLED_APPS += ('geonode.userdetails',)
