@@ -217,3 +217,8 @@ if "geonode.userdetails" in settings.INSTALLED_APPS:
     urlpatterns += [  # '',
         url(r'^userdetails/', include('geonode.userdetails.urls')),
     ]
+
+if "geonode.customlogin" in settings.INSTALLED_APPS:
+    urlpatterns += [  # '',
+        url(r'^customlogin/', include('geonode.customlogin.urls')),
+    ]

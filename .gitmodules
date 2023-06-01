@@ -7,3 +7,9 @@
 [submodule "geonode/userdetails"]
 	path = geonode/userdetails
 	url = https://github.com/phardy-egis/django-geonode-userdetails.git
+[submodule "geonode/django-geonode-customlogin"]
+	path = geonode/django-geonode-customlogin
+	url = https://github.com/phardy-egis/django-geonode-customlogin.git
+[submodule "geonode/customlogin"]
+	path = geonode/customlogin
+	url = https://github.com/phardy-egis/django-geonode-customlogin.git

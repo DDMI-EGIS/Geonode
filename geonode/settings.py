@@ -447,7 +447,7 @@ INSTALLED_APPS = (
     # Boostrap admin theme
     # 'django_admin_bootstrapped.bootstrap3',
     # 'django_admin_bootstrapped',
-    # Apps bundled with Django
+    # Apps bundled with Djang
     "modeltranslation",
     "dal",
     "dal_select2",
@@ -2269,3 +2269,4 @@ SUPPORTED_DATASET_FILE_TYPES = [
 INSTALLED_APPS += ('geonode.gssync',)
 INSTALLED_APPS += ('geonode.gdc',)
 INSTALLED_APPS += ('geonode.userdetails',)
+INSTALLED_APPS += ( 'geonode.customlogin',)
