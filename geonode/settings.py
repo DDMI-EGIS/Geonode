@@ -447,7 +447,7 @@ INSTALLED_APPS = (
     # Boostrap admin theme
     # 'django_admin_bootstrapped.bootstrap3',
     # 'django_admin_bootstrapped',
-    # Apps bundled with Djang
+    # Apps bundled with Django
     "modeltranslation",
     "dal",
     "dal_select2",
@@ -682,6 +682,7 @@ LOGGING = {
         "simple": {
             "format": "%(message)s",
         },
+        "br": {"format": "%(levelname)-7s %(asctime)s %(message)s"},
     },
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
     "handlers": {
@@ -691,30 +692,32 @@ LOGGING = {
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
         },
+        "br": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "br"},
     },
     "loggers": {
         "django": {
-            "handlers": ["console"],
             "level": "ERROR",
         },
         "geonode": {
-            "handlers": ["console"],
-            "level": "ERROR",
+            "level": "WARN",
         },
+        "geonode.br": {"level": "INFO", "handlers": ["br"], "propagate": False},
         "geoserver-restconfig.catalog": {
-            "handlers": ["console"],
             "level": "ERROR",
         },
         "owslib": {
-            "handlers": ["console"],
             "level": "ERROR",
         },
         "pycsw": {
-            "handlers": ["console"],
             "level": "ERROR",
         },
         "celery": {
-            "handlers": ["console"],
+            "level": "WARN",
+        },
+        "mapstore2_adapter.plugins.serializers": {
+            "level": "ERROR",
+        },
+        "geonode_logstash.logstash": {
             "level": "ERROR",
         },
     },
@@ -826,11 +829,6 @@ SESSION_COOKIE_SECURE = ast.literal_eval(os.environ.get("SESSION_COOKIE_SECURE",
 CSRF_COOKIE_SECURE = ast.literal_eval(os.environ.get("CSRF_COOKIE_SECURE", "False"))
 CSRF_COOKIE_HTTPONLY = ast.literal_eval(os.environ.get("CSRF_COOKIE_HTTPONLY", "False"))
 CORS_ALLOW_ALL_ORIGINS = ast.literal_eval(os.environ.get("CORS_ALLOW_ALL_ORIGINS", "False"))
-CORS_ALLOWED_ORIGINS = [os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:3000")]
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-  os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:3000"),
-)
 X_FRAME_OPTIONS = os.environ.get("X_FRAME_OPTIONS", "DENY")
 SECURE_CONTENT_TYPE_NOSNIFF = ast.literal_eval(os.environ.get("SECURE_CONTENT_TYPE_NOSNIFF", "True"))
 SECURE_BROWSER_XSS_FILTER = ast.literal_eval(os.environ.get("SECURE_BROWSER_XSS_FILTER", "True"))
@@ -2228,7 +2226,7 @@ SUPPORTED_DATASET_FILE_TYPES = [
         "id": "tiff",
         "label": "GeoTIFF",
         "format": "raster",
-        "ext": ["tiff", "tif"],
+        "ext": ["tiff", "tif", "geotiff", "geotif"],
         "mimeType": ["image/tiff"],
         "optional": ["xml", "sld"],
     },
@@ -2265,6 +2263,69 @@ SUPPORTED_DATASET_FILE_TYPES = [
         "needsFiles": ["shp", "prj", "dbf", "shx", "csv", "tiff", "zip", "xml"],
     },
 ]
+
+INSTALLED_APPS += (
+    "dynamic_models",
+    "importer",
+    "importer.handlers",
+)
+
+CELERY_TASK_QUEUES += (
+    Queue("importer.import_orchestrator", GEONODE_EXCHANGE, routing_key="importer.import_orchestrator"),
+    Queue("importer.import_resource", GEONODE_EXCHANGE, routing_key="importer.import_resource", max_priority=8),
+    Queue("importer.publish_resource", GEONODE_EXCHANGE, routing_key="importer.publish_resource", max_priority=8),
+    Queue(
+        "importer.create_geonode_resource",
+        GEONODE_EXCHANGE,
+        routing_key="importer.create_geonode_resource",
+        max_priority=8,
+    ),
+    Queue(
+        "importer.import_with_ogr2ogr", GEONODE_EXCHANGE, routing_key="importer.import_with_ogr2ogr", max_priority=10
+    ),
+    Queue("importer.import_next_step", GEONODE_EXCHANGE, routing_key="importer.import_next_step", max_priority=3),
+    Queue(
+        "importer.create_dynamic_structure",
+        GEONODE_EXCHANGE,
+        routing_key="importer.create_dynamic_structure",
+        max_priority=10,
+    ),
+    Queue(
+        "importer.copy_geonode_resource", GEONODE_EXCHANGE, routing_key="importer.copy_geonode_resource", max_priority=0
+    ),
+    Queue("importer.copy_dynamic_model", GEONODE_EXCHANGE, routing_key="importer.copy_dynamic_model"),
+    Queue("importer.copy_geonode_data_table", GEONODE_EXCHANGE, routing_key="importer.copy_geonode_data_table"),
+    Queue("importer.copy_raster_file", GEONODE_EXCHANGE, routing_key="importer.copy_raster_file"),
+    Queue("importer.rollback", GEONODE_EXCHANGE, routing_key="importer.rollback"),
+)
+
+DATABASE_ROUTERS = ["importer.db_router.DatastoreRouter"]
+
+SIZE_RESTRICTED_FILE_UPLOAD_ELEGIBLE_URL_NAMES += ("importer_upload",)
+
+IMPORTER_HANDLERS = ast.literal_eval(
+    os.getenv(
+        "IMPORTER_HANDLERS",
+        "[\
+    'importer.handlers.gpkg.handler.GPKGFileHandler',\
+    'importer.handlers.geojson.handler.GeoJsonFileHandler',\
+    'importer.handlers.shapefile.handler.ShapeFileHandler',\
+    'importer.handlers.kml.handler.KMLFileHandler',\
+    'importer.handlers.csv.handler.CSVFileHandler',\
+    'importer.handlers.geotiff.handler.GeoTiffFileHandler'\
+]",
+    )
+)
+
+INSTALLED_APPS += ("geonode.facets",)
+GEONODE_APPS += ("geonode.facets",)
+
+FACET_PROVIDERS = (
+    "geonode.facets.providers.category.CategoryFacetProvider",
+    "geonode.facets.providers.users.OwnerFacetProvider",
+    "geonode.facets.providers.thesaurus.ThesaurusFacetProvider",
+    "geonode.facets.providers.region.RegionFacetProvider",
+)
 
 INSTALLED_APPS += ('geonode.gssync',)
 INSTALLED_APPS += ('geonode.gdc',)
