@@ -38,9 +38,9 @@ if [ -z "${JENKINS_HTTP_PORT}" ]; then
 fi
 
 echo "Replacing environement variables"
-envsubst '\$HTTP_HOST \$HTTPS_HOST \$RESOLVER \$EGIS_EXTERNAL_APP' < /etc/nginx/nginx.conf.envsubst > /etc/nginx/nginx.conf
-envsubst '\$HTTP_HOST \$HTTPS_HOST \$RESOLVER \$EGIS_EXTERNAL_APP' < /etc/nginx/nginx.https.available.conf.envsubst > /etc/nginx/nginx.https.available.conf
-envsubst '\$HTTP_HOST \$HTTPS_HOST \$JENKINS_HTTP_PORT \$EGIS_EXTERNAL_APP' < /etc/nginx/sites-enabled/geonode.conf.envsubst > /etc/nginx/sites-enabled/geonode.conf
+envsubst '\$HTTP_HOST \$HTTPS_HOST \$RESOLVER \$EGIS_EXTERNAL_APP \$EGIS_DJANGO_CONTAINER_NAME' < /etc/nginx/nginx.conf.envsubst > /etc/nginx/nginx.conf
+envsubst '\$HTTP_HOST \$HTTPS_HOST \$RESOLVER \$EGIS_EXTERNAL_APP \$EGIS_DJANGO_CONTAINER_NAME' < /etc/nginx/nginx.https.available.conf.envsubst > /etc/nginx/nginx.https.available.conf
+envsubst '\$HTTP_HOST \$HTTPS_HOST \$JENKINS_HTTP_PORT \$EGIS_EXTERNAL_APP \$EGIS_DJANGO_CONTAINER_NAME' < /etc/nginx/sites-enabled/geonode.conf.envsubst > /etc/nginx/sites-enabled/geonode.conf
 
 echo "Enabling or not https configuration"
 if [ -z "${HTTPS_HOST}" ]; then 
