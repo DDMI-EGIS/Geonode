@@ -2331,4 +2331,16 @@ INSTALLED_APPS += ('geonode.gssync',)
 INSTALLED_APPS += ('geonode.gdc',)
 INSTALLED_APPS += ('geonode.userdetails',)
 INSTALLED_APPS += ( 'geonode.customlogin',)
-MIDDLEWARE += ('geonode.customlogin.middleware.CheckLoginMiddleware',)
+# MIDDLEWARE += ('geonode.customlogin.middleware.CheckLoginMiddleware',)
+
+# Extra security parameters
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+SESSION_COOKIE_HTTPONLY=True
+SESSION_COOKIE_SECURE=True# add these import lines to the top of your geonode settings file
+# SESSION_COOKIE_SAMESITE='None'
+
+# CSRF_COOKIE_SAMESITE='None'
+# CSRF_COOKIE_HTTPONLY=True
+# CSRF_COOKIE_SECURE=True
+
+THESAURUS_DEFAULT_LANG = os.environ.get("THESAURUS_DEFAULT_LANG", "en")

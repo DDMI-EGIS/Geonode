@@ -3,7 +3,7 @@ version: '3.9'
 # Common Django template for GeoNode and Celery services below
 x-common-django:
   &default-common-django
-  image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.3-django
+  image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.2-django
   restart: on-failure
   env_file:
     - .env
@@ -43,7 +43,7 @@ services:
   # Celery worker that executes celery tasks created by Django.
   celery:
     << : *default-common-django
-    image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.3-django
+    image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.2-django
     container_name: celery4${COMPOSE_PROJECT_NAME}
     depends_on:
       - django
@@ -54,7 +54,7 @@ services:
 
   # Nginx is serving django static and media files and proxies to django and geonode
   geonode:
-    image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.3-nginx
+    image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.2-nginx
     build: ./scripts/docker/nginx/
     container_name: nginx4${COMPOSE_PROJECT_NAME}
     # command: sleep infinity
@@ -66,12 +66,12 @@ services:
       - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
       - RESOLVER=127.0.0.11
       - EGIS_EXTERNAL_APP=${EGIS_EXTERNAL_APP}
-      - EGIS_DJANGO_CONTAINER_NAME=${EGIS_DJANGO_CONTAINER_NAME}
     ports:
       - "${HTTP_PORT}:80"
       - "${HTTPS_PORT}:443"
     volumes:
-      # - ./scripts/docker/nginx/geonode.conf:/etc/nginx/sites-enabled/geonode.conf
+      - ./scripts/docker/nginx/geonode.conf:/etc/nginx/sites-enabled/geonode.conf
+      - ./scripts/docker/nginx/geonode.conf.envsubst:/etc/nginx/sites-enabled/geonode.conf.envsubst
       - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
       - statics:/mnt/volumes/statics
@@ -79,7 +79,7 @@ services:
 
   # Gets and installs letsencrypt certificates
   letsencrypt:
-    image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.3-letsencrypt
+    image: registry-gitdoit.egis.fr/go3e-eau/open-hypervision/oh-geonode:v0.0.2-letsencrypt
     build: ./scripts/docker/letsencrypt/
     container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
     environment:

@@ -133,7 +133,7 @@ sherlock==0.4.1
 
 # required by monitoring
 psutil==5.9.5
-django-cors-headers==4.0.0
+django-cors-headers==4.3.1
 user-agents
 django-user-agents
 xmljson
@@ -175,3 +175,6 @@ protobuf==3.20.3
 mako==1.2.4
 certifi>=2022.12.7 # not directly required, pinned by Snyk to avoid a vulnerability
 jwcrypto>=1.4 # not directly required, pinned by Snyk to avoid a vulnerability
+
+# Custom security
+django-csp==3.7
