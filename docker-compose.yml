@@ -80,14 +80,14 @@ services:
     restart: unless-stopped
 
   # Gets and installs letsencrypt certificates
-  letsencrypt:
-    image: geonode/letsencrypt:2.6.0-latest
-    container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
-    env_file:
-      - .env
-    volumes:
-      - nginx-certificates:/geonode-certificates
-    restart: unless-stopped
+  # letsencrypt:
+  #   image: geonode/letsencrypt:2.6.0-latest
+  #   container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - nginx-certificates:/geonode-certificates
+  #   restart: unless-stopped
 
   # Geoserver backend
   geoserver:
