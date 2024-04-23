@@ -204,3 +204,8 @@ if settings.MONITORING_ENABLED:
 urlpatterns += [
     re_path(r"^metadata_update_redirect$", views.metadata_update_redirect, name="metadata_update_redirect"),
 ]
+
+# oauthtoolkit auth provider
+urlpatterns += [
+     re_path(r"^oauthtoolkitprovider/", include(("geonode.oauthtoolkitprovider.urls", "geonode.oauthtoolkitprovider"), namespace="oauthtoolkitprovider")),
+]

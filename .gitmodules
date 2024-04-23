@@ -1,0 +1,3 @@
+[submodule "geonode/oauthtoolkitprovider"]
+	path = geonode/oauthtoolkitprovider
+	url = https://github.com/phardy-egis/django-geonode-oauthtoolkitprovider.git

@@ -2370,3 +2370,8 @@ DATASET_DOWNLOAD_HANDLERS = ast.literal_eval(os.getenv("DATASET_DOWNLOAD_HANDLER
 AUTO_ASSIGN_REGISTERED_MEMBERS_TO_CONTRIBUTORS = ast.literal_eval(
     os.getenv("AUTO_ASSIGN_REGISTERED_MEMBERS_TO_CONTRIBUTORS", "True")
 )
+
+INSTALLED_APPS += (
+    "geonode.oauthtoolkitprovider",
+)
+OAUTH_SERVER_BASEURL = "https://be-oh.localhost" ## os.getenv('OHWORKER_BASEURL')
