@@ -725,6 +725,11 @@ LOGGING = {
         "geonode_logstash.logstash": {
             "level": "ERROR",
         },
+        "debug": {
+            'handers': ['console'],
+            "level": "DEBUG",
+            'propagate': True,
+        },
     },
 }
 
@@ -2374,4 +2379,7 @@ AUTO_ASSIGN_REGISTERED_MEMBERS_TO_CONTRIBUTORS = ast.literal_eval(
 INSTALLED_APPS += (
     "geonode.oauthtoolkitprovider",
 )
-OAUTH_SERVER_BASEURL = "https://be-oh.localhost" ## os.getenv('OHWORKER_BASEURL')
+
+
+OAUTH_SERVER_BASEURL_PUBLIC = os.getenv('OAUTH_SERVER_BASEURL_PUBLIC', "https://be-oh.localhost")
+OAUTH_SERVER_BASEURL_INTERNAL = os.getenv('OAUTH_SERVER_BASEURL_INTERNAL', "http://oh-worker-be:8000")
