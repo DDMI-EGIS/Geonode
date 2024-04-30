@@ -213,5 +213,5 @@ urlpatterns += [
 
 if "geonode.gssync" in settings.INSTALLED_APPS:
     urlpatterns += [  # '',
-        url(r'^gssync/', include('geonode.gssync.urls')),
+        re_path(r'^gssync/', include('geonode.gssync.urls')),
     ]
