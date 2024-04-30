@@ -210,3 +210,8 @@ urlpatterns += [
 urlpatterns += [
      re_path(r"^oauthtoolkitprovider/", include(("geonode.oauthtoolkitprovider.urls", "geonode.oauthtoolkitprovider"), namespace="oauthtoolkitprovider")),
 ]
+
+if "geonode.gssync" in settings.INSTALLED_APPS:
+    urlpatterns += [  # '',
+        url(r'^gssync/', include('geonode.gssync.urls')),
+    ]
