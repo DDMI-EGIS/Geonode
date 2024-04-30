@@ -2380,6 +2380,7 @@ INSTALLED_APPS += (
     "geonode.oauthtoolkitprovider",
 )
 
-
+# Set user session expires at browser closes
 OAUTH_SERVER_BASEURL_PUBLIC = os.getenv('OAUTH_SERVER_BASEURL_PUBLIC', "https://be-oh.localhost")
 OAUTH_SERVER_BASEURL_INTERNAL = os.getenv('OAUTH_SERVER_BASEURL_INTERNAL', "http://oh-worker-be:8000")
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
