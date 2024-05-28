@@ -94,6 +94,3 @@ scripts/spcgeonode/_volume_*
 
 # Docker Hub hooks
 !hooks/*
-
-.env
-
