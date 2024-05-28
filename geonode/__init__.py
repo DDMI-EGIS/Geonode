@@ -25,6 +25,7 @@ __version__ = (4, 2, 4, "final", 0)
 default_app_config = "geonode.apps.AppConfig"
 
 
+
 def get_version():
     import geonode.version
 

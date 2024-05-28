@@ -13,9 +13,9 @@ x-common-django:
     - backup-restore:/backup_restore
     - data:/data
     - tmp:/tmp
-  depends_on:
-    db:
-      condition: service_healthy
+  # depends_on:
+  #   db:
+  #     condition: service_healthy
 
 services:
 
@@ -67,9 +67,9 @@ services:
       - .env
     environment:
       - RESOLVER=127.0.0.11
-    ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+    # ports:
+    #   - "${HTTP_PORT}:80"
+    #   - "${HTTPS_PORT}:443"
     volumes:
       - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
@@ -77,14 +77,14 @@ services:
     restart: unless-stopped
 
   # Gets and installs letsencrypt certificates
-  letsencrypt:
-    image: geonode/letsencrypt:2.6.0-v1
-    container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
-    env_file:
-      - .env
-    volumes:
-      - nginx-certificates:/geonode-certificates
-    restart: unless-stopped
+  #   letsencrypt:
+  #     image: geonode/letsencrypt:2.6.0-v1
+  #     container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
+  #     env_file:
+  #       - .env
+  #     volumes:
+  #       - nginx-certificates:/geonode-certificates
+  #     restart: unless-stopped
 
   # Geoserver backend
   geoserver:
@@ -98,8 +98,8 @@ services:
       retries: 2
     env_file:
       - .env
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
     volumes:
       - statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
@@ -124,22 +124,22 @@ services:
       test: "ls -A '/geoserver_data/data' | wc -l"
 
   # PostGIS database.
-  db:
-    # use geonode official postgis 15 image
-    image: geonode/postgis:15.3-v1
-    command: postgres -c "max_connections=${POSTGRESQL_MAX_CONNECTIONS}"
-    container_name: db4${COMPOSE_PROJECT_NAME}
-    env_file:
-      - .env
-    volumes:
-      - dbdata:/var/lib/postgresql/data
-      - dbbackups:/pg_backups
-    restart: unless-stopped
-    healthcheck:
-      test: "pg_isready -d postgres -U postgres"
-    # uncomment to enable remote connections to postgres
-    #ports:
-    #  - "5432:5432"
+  #   db:
+  #     # use geonode official postgis 15 image
+  #     image: geonode/postgis:15.3-v1
+  #     command: postgres -c "max_connections=${POSTGRESQL_MAX_CONNECTIONS}"
+  #     container_name: db4${COMPOSE_PROJECT_NAME}
+  #     env_file:
+  #       - .env
+  #     volumes:
+  #       - dbdata:/var/lib/postgresql/data
+  #       - dbbackups:/pg_backups
+  #     restart: unless-stopped
+  #     healthcheck:
+  #       test: "pg_isready -d postgres -U postgres"
+  #     # uncomment to enable remote connections to postgres
+  #     #ports:
+  #     #  - "5432:5432"
 
   # Vanilla RabbitMQ service. This is needed by celery
   rabbitmq:
@@ -158,10 +158,10 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-nginxcerts
   geoserver-data-dir:
     name: ${COMPOSE_PROJECT_NAME}-gsdatadir
-  dbdata:
-    name: ${COMPOSE_PROJECT_NAME}-dbdata
-  dbbackups:
-    name: ${COMPOSE_PROJECT_NAME}-dbbackups
+  # dbdata:
+  #   name: ${COMPOSE_PROJECT_NAME}-dbdata
+  # dbbackups:
+  #   name: ${COMPOSE_PROJECT_NAME}-dbbackups
   backup-restore:
     name: ${COMPOSE_PROJECT_NAME}-backup-restore
   data:

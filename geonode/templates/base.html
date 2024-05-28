@@ -258,9 +258,10 @@
                {% render_nav_menu 'TOPBAR_MENU' %}
             {% endblock my_extra_right_tab %}
 
-            {% if not user.is_authenticated and ACCOUNT_OPEN_SIGNUP and not READ_ONLY_MODE %}
+            <!-- Removed to force social authentication -->
+            <!-- {% if not user.is_authenticated and ACCOUNT_OPEN_SIGNUP and not READ_ONLY_MODE %}
               <li><a href="{% url "account_signup" %}">{% trans "Register" %}</a></li>
-            {% endif %}
+            {% endif %} -->
             {% if user.is_authenticated %}
             <li>
               <a href="#" class="dropdown-toggle avatar" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -393,7 +394,7 @@
           {% csrf_token %}
             <select class="col-md-6 pull-right" name="language" onchange="javascript:form.submit()">
               {% for lang in LANGUAGES %}
-              <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
+              <option value="{{ lang.0 }}" {% if LANGUAGE_CODE == lang.0 %} selected="selected"{% endif %}>
                 {{ lang.1 }}
               </option>
               {% endfor %}
