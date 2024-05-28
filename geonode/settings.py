@@ -1650,7 +1650,7 @@ SEARCH_FILTERS = {
 TINYMCE_DEFAULT_CONFIG = {
     "theme": "silver",
     "height": 200,
-    "plugins": "preview paste searchreplace autolink directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars",  # noqa
+    "plugins": "preview searchreplace autolink directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking insertdatetime advlist lists wordcount help charmap quickbars",  # noqa
     "imagetools_cors_hosts": ["picsum.photos"],
     "menubar": False,
     "statusbar": False,
