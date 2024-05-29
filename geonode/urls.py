@@ -89,7 +89,8 @@ urlpatterns += [
     # h keywords
     url(r"^h_keywords_api$", views.h_keywords, name="h_keywords_api"),
     # Social views
-    url(r"^account/signup/", CustomSignupView.as_view(), name="account_signup"),
+    # Disabled to force OAUTH login only
+    # url(r"^account/signup/", CustomSignupView.as_view(), name="account_signup"),
     url(r"^account/", include("allauth.urls")),
     url(r"^invitations/", include("geonode.invitations.urls", namespace="geonode.invitations")),
     url(r"^people/", include("geonode.people.urls")),
@@ -203,3 +204,14 @@ if settings.MONITORING_ENABLED:
 urlpatterns += [
     url(r"^metadata_update_redirect$", views.metadata_update_redirect, name="metadata_update_redirect"),
 ]
+
+# oauthtoolkit auth provider
+if "geonode.oauthtoolkitprovider" in settings.INSTALLED_APPS:
+    urlpatterns += [
+        url(r"^oauthtoolkitprovider/", include(("geonode.oauthtoolkitprovider.urls", "geonode.oauthtoolkitprovider"), namespace="oauthtoolkitprovider")),
+    ]
+
+if "geonode.gssync" in settings.INSTALLED_APPS:
+    urlpatterns += [  # '',
+        url(r'^gssync/', include('geonode.gssync.urls')),
+    ]
