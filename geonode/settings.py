@@ -725,6 +725,11 @@ LOGGING = {
         "geonode_logstash.logstash": {
             "level": "ERROR",
         },
+        "debug": {
+            'handers': ['console'],
+            "level": "DEBUG",
+            'propagate': True,
+        },
     },
 }
 
@@ -2365,3 +2370,13 @@ DATASET_DOWNLOAD_HANDLERS = ast.literal_eval(os.getenv("DATASET_DOWNLOAD_HANDLER
 AUTO_ASSIGN_REGISTERED_MEMBERS_TO_CONTRIBUTORS = ast.literal_eval(
     os.getenv("AUTO_ASSIGN_REGISTERED_MEMBERS_TO_CONTRIBUTORS", "True")
 )
+
+INSTALLED_APPS += (
+    "geonode.oauthtoolkitprovider",
+)
+
+# Set user session expires at browser closes
+OAUTH_SERVER_BASEURL_PUBLIC = os.getenv('OAUTH_SERVER_BASEURL_PUBLIC', "https://be-oh.localhost")
+OAUTH_SERVER_BASEURL_INTERNAL = os.getenv('OAUTH_SERVER_BASEURL_INTERNAL', "http://oh-worker-be:8000")
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+INSTALLED_APPS += ('geonode.gssync',)
