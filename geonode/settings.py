@@ -2380,3 +2380,6 @@ OAUTH_SERVER_BASEURL_PUBLIC = os.getenv('OAUTH_SERVER_BASEURL_PUBLIC', "https://
 OAUTH_SERVER_BASEURL_INTERNAL = os.getenv('OAUTH_SERVER_BASEURL_INTERNAL', "http://oh-worker-be:8000")
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 INSTALLED_APPS += ('geonode.gssync',)
+CELERY_TASK_QUEUES += (
+        Queue("geonode.gssync", GEONODE_EXCHANGE, routing_key="geonode.gssync", priority=0),
+)
