@@ -2383,3 +2383,9 @@ INSTALLED_APPS += ('geonode.gssync',)
 CELERY_TASK_QUEUES += (
         Queue("geonode.gssync", GEONODE_EXCHANGE, routing_key="geonode.gssync", priority=0),
 )
+
+# Used to develop MapStore 2 client when debug is active (this is the case for development environments)
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [ "https://*.egis-group.io",  "https://*.egis-group.dev", "https://localhost:8081" ]
+else:
+    CSRF_TRUSTED_ORIGINS = [ "https://*.egis-group.io",  "https://*.egis-group.dev" ]
