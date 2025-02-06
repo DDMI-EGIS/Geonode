@@ -30,6 +30,7 @@ from django.contrib import admin
 from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import JavaScriptCatalog
 from django.contrib.sitemaps.views import sitemap
+from django.views.generic.base import RedirectView
 
 import geonode.proxy.urls
 from . import views
@@ -91,7 +92,8 @@ urlpatterns += [
     # h keywords
     re_path(r"^h_keywords_api$", views.h_keywords, name="h_keywords_api"),
     # Social views
-    # re_path(r"^account/signup/", CustomSignupView.as_view(), name="account_signup"),
+    # EGIS: Disable signup view
+    path("account/signup/", RedirectView.as_view(url='/account/login/')),
     re_path(r"^account/", include("allauth.urls")),
     re_path(r"^invitations/", include("geonode.invitations.urls", namespace="geonode.invitations")),
     re_path(r"^people/", include("geonode.people.urls")),
