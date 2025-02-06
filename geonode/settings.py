@@ -1362,7 +1362,8 @@ except ValueError:
     AVATAR_PROVIDERS = (
         (
             "avatar.providers.PrimaryAvatarProvider",
-            "avatar.providers.GravatarAvatarProvider",
+            # EGIS: Disable gravatar provider for security reasons
+            # "avatar.providers.GravatarAvatarProvider",
             "avatar.providers.DefaultAvatarProvider",
         )
         if os.getenv("AVATAR_PROVIDERS") is None
@@ -2364,3 +2365,27 @@ ASSET_HANDLERS = [
 ]
 INSTALLED_APPS += ("geonode.assets",)
 GEONODE_APPS += ("geonode.assets",)
+
+# EGIS: Used by geonode.oauthtoolkitprovider Django app
+OAUTH_SERVER_BASEURL_PUBLIC = os.getenv('OAUTH_SERVER_BASEURL_PUBLIC', "https://be-oh.localhost")
+OAUTH_SERVER_BASEURL_INTERNAL = os.getenv('OAUTH_SERVER_BASEURL_INTERNAL', "http://oh-worker-be:8000")
+
+# EGIS: Addition of  plugins
+INSTALLED_APPS += (
+    "geonode.oauthtoolkitprovider",
+    'geonode.gssync',
+)
+
+# EGIS: Dedicated queue for gssync plugin
+CELERY_TASK_QUEUES += (
+    Queue("geonode.gssync", GEONODE_EXCHANGE, routing_key="geonode.gssync", priority=0),
+)
+
+# EGIS: Addition to increase security 
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
+# EGIS: Required for frontend development pruposes
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [ "https://*.egis-group.io",  "https://*.egis-group.dev", "https://localhost:8081" ]
+else:
+    CSRF_TRUSTED_ORIGINS = [ "https://*.egis-group.io",  "https://*.egis-group.dev" ]

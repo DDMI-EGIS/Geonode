@@ -258,9 +258,9 @@
                {% render_nav_menu 'TOPBAR_MENU' %}
             {% endblock my_extra_right_tab %}
 
-            {% if not user.is_authenticated and ACCOUNT_OPEN_SIGNUP and not READ_ONLY_MODE %}
+            <!-- {% if not user.is_authenticated and ACCOUNT_OPEN_SIGNUP and not READ_ONLY_MODE %}
               <li><a href="{% url "account_signup" %}">{% trans "Register" %}</a></li>
-            {% endif %}
+            {% endif %} -->
             {% if user.is_authenticated %}
             <li>
               <a href="#" class="dropdown-toggle avatar" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
