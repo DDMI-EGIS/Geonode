@@ -1,6 +1,6 @@
-[submodule "django-geonode-gssync"]
-	path = django-geonode-gssync
+[submodule "geonode/gssync"]
+	path = geonode/gssync
 	url = https://github.com/DDMI-EGIS/django-geonode-gssync.git
-[submodule "django-geonode-oauthtoolkitprovider"]
-	path = django-geonode-oauthtoolkitprovider
+[submodule "geonode/oauthtoolkitprovider"]
+	path = geonode/oauthtoolkitprovider
 	url = https://github.com/DDMI-EGIS/django-geonode-oauthtoolkitprovider.git
