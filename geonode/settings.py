@@ -1368,6 +1368,11 @@ except ValueError:
         else re.split(r" *[,|:;] *", os.getenv("AVATAR_PROVIDERS"))
     )
 
+AVATAR_PROVIDERS = tuple(
+    provider for provider in AVATAR_PROVIDERS 
+    if "GravatarAvatarProvider" not in str(provider)
+)
+
 # Number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = int(os.getenv("CLIENT_RESULTS_LIMIT", "16"))
 
@@ -2374,3 +2379,27 @@ GEONODE_APPS += ("geonode.assets",)
 AVATAR_ADD_TEMPLATE = "people/avatar/add.html"
 AVATAR_CHANGE_TEMPLATE = "people/avatar/change.html"
 AVATAR_DELETE_TEMPLATE = "people/avatar/confirm_delete.html"
+
+# EGIS: Used by geonode.oauthtoolkitprovider Django app
+OAUTH_SERVER_BASEURL_PUBLIC = os.getenv('OAUTH_SERVER_BASEURL_PUBLIC', "https://be-oh.localhost")
+OAUTH_SERVER_BASEURL_INTERNAL = os.getenv('OAUTH_SERVER_BASEURL_INTERNAL', "http://oh-worker-be:8000")
+
+# EGIS: Addition of  plugins
+INSTALLED_APPS += (
+    "geonode.oauthtoolkitprovider",
+    'geonode.gssync',
+)
+
+# EGIS: Dedicated queue for gssync plugin
+CELERY_TASK_QUEUES += (
+    Queue("geonode.gssync", GEONODE_EXCHANGE, routing_key="geonode.gssync", priority=0),
+)
+
+# EGIS: Addition to increase security 
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
+# EGIS: Required for frontend development pruposes
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [ "https://*.egis-group.io",  "https://*.egis-group.dev", "https://localhost:8081" ]
+else:
+    CSRF_TRUSTED_ORIGINS = [ "https://*.egis-group.io",  "https://*.egis-group.dev" ]
