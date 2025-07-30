@@ -30,7 +30,7 @@ from django.contrib import admin
 from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import JavaScriptCatalog
 from django.contrib.sitemaps.views import sitemap
-
+from django.views.generic.base import RedirectView
 import geonode.proxy.urls
 from . import views
 from . import version
@@ -91,7 +91,8 @@ urlpatterns += [
     # h keywords
     re_path(r"^h_keywords_api$", views.h_keywords, name="h_keywords_api"),
     # Social views
-    re_path(r"^account/signup/", CustomSignupView.as_view(), name="account_signup"),
+    # EGIS: Disable signup view
+    path("account/signup/", RedirectView.as_view(url='/account/login/')),
     re_path(r"^account/login/", CustomLoginView.as_view(), name="account_login"),
     re_path(r"^account/", include("allauth.urls")),
     re_path(r"^invitations/", include("geonode.invitations.urls", namespace="geonode.invitations")),
@@ -212,3 +213,14 @@ if settings.MONITORING_ENABLED:
 urlpatterns += [
     re_path(r"^metadata_update_redirect$", views.metadata_update_redirect, name="metadata_update_redirect"),
 ]
+
+# EGIS: URL mapping for geonode.gssync module
+urlpatterns += [
+     re_path(r"^oauthtoolkitprovider/", include(("geonode.oauthtoolkitprovider.urls", "geonode.oauthtoolkitprovider"), namespace="oauthtoolkitprovider")),
+]
+
+# EGIS: URL mapping for geonode.oauthtoolkitprovider module
+if "geonode.gssync" in settings.INSTALLED_APPS:
+    urlpatterns += [  # '',
+        re_path(r'^gssync/', include('geonode.gssync.urls')),
+    ]
